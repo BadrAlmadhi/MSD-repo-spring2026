@@ -1,0 +1,10 @@
+# macOS
+.DS_Store
+
+# Build artifacts
+*.o
+msdscript
+*.dSYM/
+
+# VS Code settings
+.vscode/
