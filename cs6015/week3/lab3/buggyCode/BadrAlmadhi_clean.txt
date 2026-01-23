@@ -1,0 +1,6 @@
+Script started on Thu Jan 22 20:06:45 2026
+%                                                                     ➜  buggyCode =➜  buggyCode git:(main) ✗ clang++ *.cpp -o program
+clang++ *.cpp -o program>
+%                                                                     ➜  buggyCode git:(main) ✗ =lls -l program>
+-rwxr-xr-x@ 1 msdprogram  staff  167240 Jan 22 20:07 program
+%                                                                     ➜  buggyCode git:(main) ✗ =

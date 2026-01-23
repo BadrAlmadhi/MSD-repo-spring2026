@@ -1,0 +1,232 @@
+Script started on Thu Jan 22 20:06:45 2026
+[1m[7m%[27m[1m[0m                                                                     ]2;msdprogram@Badrs-MacBook-Air:~/Desktop/MSD-repo-spring2026/cs6015/week3/lab3/buggyCode]1;..ab3/buggyCode]7;file://Badrs-MacBook-Air.local/Users/msdprogram/Desktop/MSD-repo-spring2026/cs6015/week3/lab3/buggyCode\[0m[27m[24m[J[01;32m➜  [36mbuggyCode[00m [K[?1h=[?2004h[0m[27m[24m[J[01;32m➜  [36mbuggyCode[00m [01;34mgit:([31mmain[34m) [33m✗[00m [K[7mclang++ *.cpp -o program[27m
+[K[A[26C[27mc[27ml[27ma[27mn[27mg[27m+[27m+[27m [27m*[27m.[27mc[27mp[27mp[27m [27m-[27mo[27m [27mp[27mr[27mo[27mg[27mr[27ma[27mm[1B[K[A[26C[?1l>[?2004l[1B
+]2;clang++ *.cpp -o program]1;clang++[1m[7m%[27m[1m[0m                                                                     ]2;msdprogram@Badrs-MacBook-Air:~/Desktop/MSD-repo-spring2026/cs6015/week3/lab3/buggyCode]1;..ab3/buggyCode]7;file://Badrs-MacBook-Air.local/Users/msdprogram/Desktop/MSD-repo-spring2026/cs6015/week3/lab3/buggyCode\[0m[27m[24m[J[01;32m➜  [36mbuggyCode[00m [01;34mgit:([31mmain[34m) [33m✗[00m [K[?1h=[?2004hlls -l program[?1l>[?2004l
+]2;ls -G -l program]1;ls-rwxr-xr-x@ 1 msdprogram  staff  167240 Jan 22 20:07 [31mprogram[39;49m[0m
+[1m[7m%[27m[1m[0m                                                                     ]2;msdprogram@Badrs-MacBook-Air:~/Desktop/MSD-repo-spring2026/cs6015/week3/lab3/buggyCode]1;..ab3/buggyCode]7;file://Badrs-MacBook-Air.local/Users/msdprogram/Desktop/MSD-repo-spring2026/cs6015/week3/lab3/buggyCode\[0m[27m[24m[J[01;32m➜  [36mbuggyCode[00m [01;34mgit:([31mmain[34m) [33m✗[00m [K[?1h=[?2004h[7mperl -pe '[27m
+[7m  s/\e\[[0-9;?]*[ -\/]*[@-~]//g;     # remove ANSI CSI sequences[27m[K
+[7m  s/\e\][^\a]*(?:\a|\e\\)//g;        # remove OSC (window title) sequ[7me[7mnces[27m[K
+[7m  s/\r//g;                           # remove carriage returns[27m[K
+[7m' BadrAlmadhi.txt > BadrAlmadhi_clean.txt[27m[K
+[K[6A[26C[27mp[27me[27mr[27ml[27m [27m-[27mp[27me[27m [27m'[1B[27m [27m [27ms[27m/[27m\[27me[27m\[27m[[27m[[27m0[27m-[27m9[27m;[27m?[27m][27m*[27m[[27m [27m-[27m\[27m/[27m][27m*[27m[[27m@[27m-[27m~[27m][27m/[27m/[27mg[27m;[27m [27m [27m [27m [27m [27m#[27m [27mr[27me[27mm[27mo[27mv[27me[27m [27mA[27mN[27mS[27mI[27m [27mC[27mS[27mI[27m [27ms[27me[27mq[27mu[27me[27mn[27mc[27me[27ms[1B[27m [27m [27ms[27m/[27m\[27me[27m\[27m][27m[[27m^[27m\[27ma[27m][27m*[27m([27m?[27m:[27m\[27ma[27m|[27m\[27me[27m\[27m\[27m)[27m/[27m/[27mg[27m;[27m [27m [27m [27m [27m [27m [27m [27m [27m#[27m [27mr[27me[27mm[27mo[27mv[27me[27m [27mO[27mS[27mC[27m [27m([27mw[27mi[27mn[27md[27mo[27mw[27m [27mt[27mi[27mt[27ml[27me[27m)[27m [27ms[27me[27mq[27mue[27mn[27mc[27me[27ms[1B[27m [27m [27ms[27m/[27m\[27mr[27m/[27m/[27mg[27m;[27m [27m [27m [27m [27m [27m [27m [27m [27m [27m [27m [27m [27m [27m [27m [27m [27m [27m [27m [27m [27m [27m [27m [27m [27m [27m [27m [27m#[27m [27mr[27me[27mm[27mo[27mv[27me[27m [27mc[27ma[27mr[27mr[27mi[27ma[27mg[27me[27m [27mr[27me[27mt[27mu[27mr[27mn[27ms[1B[27m'[27m [27mB[27ma[27md[27mr[27mA[27ml[27mm[27ma[27md[27mh[27mi[27m.[27mt[27mx[27mt[27m [27m>[27m [27mB[27ma[27md[27mr[27mA[27ml[27mm[27ma[27md[27mh[27mi[27m_[27mc[27ml[27me[27ma[27mn[27m.[27mt[27mx[27mt[1B[K[A[?1l>[?2004l[1B
+]2;perl -pe  BadrAlmadhi.txt > BadrAlmadhi_clean.txt]1;perl[1m[7m%[27m[1m[0m                                                                     ]2;msdprogram@Badrs-MacBook-Air:~/Desktop/MSD-repo-spring2026/cs6015/week3/lab3/buggyCode]1;..ab3/buggyCode]7;file://Badrs-MacBook-Air.local/Users/msdprogram/Desktop/MSD-repo-spring2026/cs6015/week3/lab3/buggyCode\[0m[27m[24m[J[01;32m➜  [36mbuggyCode[00m [01;34mgit:([31mmain[34m) [33m✗[00m [K[?1h=[?2004h[7mclang++ *.cpp -g -O0 -o program[27m
+[7mls -l program[27m[K
+[K[A[A[26C[27mc[27ml[27ma[27mn[27mg[27m+[27m+[27m [27m*[27m.[27mc[27mp[27mp[27m [27m-[27mg[27m [27m-[27mO[27m0[27m [27m-[27mo[27m [27mp[27mr[27mo[27mg[27mr[27ma[27mm[1B[27ml[27ms[27m [27m-[27ml[27m [27mp[27mr[27mo[27mg[27mr[27ma[27mm[1B[K[?1l>[?2004l
+]2;clang++ *.cpp -g -O0 -o program; ls -G -l program]1;clang++-rwxr-xr-x@ 1 msdprogram  staff  213944 Jan 22 20:14 [31mprogram[39;49m[0m
+[1m[7m%[27m[1m[0m                                                                     ]2;msdprogram@Badrs-MacBook-Air:~/Desktop/MSD-repo-spring2026/cs6015/week3/lab3/buggyCode]1;..ab3/buggyCode]7;file://Badrs-MacBook-Air.local/Users/msdprogram/Desktop/MSD-repo-spring2026/cs6015/week3/lab3/buggyCode\[0m[27m[24m[J[01;32m➜  [36mbuggyCode[00m [01;34mgit:([31mmain[34m) [33m✗[00m [K[?1h=[?2004hlls -l program[?1l>[?2004l
+]2;ls -G -l program]1;ls-rwxr-xr-x@ 1 msdprogram  staff  213944 Jan 22 20:14 [31mprogram[39;49m[0m
+[1m[7m%[27m[1m[0m                                                                     ]2;msdprogram@Badrs-MacBook-Air:~/Desktop/MSD-repo-spring2026/cs6015/week3/lab3/buggyCode]1;..ab3/buggyCode]7;file://Badrs-MacBook-Air.local/Users/msdprogram/Desktop/MSD-repo-spring2026/cs6015/week3/lab3/buggyCode\[0m[27m[24m[J[01;32m➜  [36mbuggyCode[00m [01;34mgit:([31mmain[34m) [33m✗[00m [K[?1h=[?2004hls -l program[13Dclang++ *.cpp -g -O0 -o program
+ls -l program[K
+[K[A[A[57C[31Dls                             [1B[K[1B[K[A[A[28Ccd buggyCode[12Dls          [10DA  -l program[8Dh          -lh  program[11D[3Ch          of -i :8080[11D -a        [8DAssignment1/GrayscaleImage[15D               [15DA            l  git statusadd Assignment1[19Dls                 [17Dgit add -r Assignment1[22Dls                    [20Dgit add Assignment1[15Dstatus         [9D[10Dls Assignment1/GrayscaleImage[26D                          [27Dcp Assignment1 ~/6012_A1_BACKUP[28D-r Assignment1 ~/6012_A1_BACKUP[34Dclea[2C                            [29Dls   git rm --cached Assignment1/[20Dr --cached Assignment1/[27Dad[11P[14C           [11D[16Dstatus          [10D[10Dclear     git status[10Dcd ..     ls    -avim .gitignore[14Dgit add .gitignore[14Dcommit -m "Added Java gitignore settings"[K[A[28Cpush[K[1B[K[A[34C[8Dclear   git status[10Dls        [8Dgit add CS6011[10Dstatus    commit -m "Big 6011 update"[27Dpush                       [23D[8Dclear   git statusadd . statuscommit -m "Big 6012 update"[27Dpush                       [23D[8Dclear   git status[10Dcd CS6012 [9Dls       cd week1/day1[13Dls           [11Dgit add .ststuasa[2Cs commit -m "final A1"[20Dpush origin mian    ain [21Dcd Desktop/MSD-repo [19Dgit status         [9Drestore CS6012/week1/day2/assignment02/src/assignment02/Book.java[K[A[6Cti[1B[17DLibrary.java[A[1Cstatus[K[1B[K[A[36Crestore CS6012/week1/day2/assignment02/src/assignment02/Library.java[K[A[1Cstatus[K[1B[K[A[36C[10Dclear     git add . statuscommit -m "Finished A2 "[24Dpush origin mian        [8Dai[1C               g  [7mclang++ *.cpp -g -O0 -o program[1B[27m[7mls -l program[27m[K[A[13C[27mc[27ml[27ma[27mn[27mg[27m+[27m+[27m [27m*[27m.[27mc[27mp[27mp[27m [27m-[27mg[27m [27m-[27mO[27m0[27m [27m-[27mo[27m [27mp[27mr[27mo[27mg[27mr[27ma[27mm[1B[27ml[27ms[27m [27m-[27ml[27m [27mp[27mr[27mo[27mg[27mr[27ma[27mm[A[26C[1C[1C[1C[1C[1C[1C[1C[1C[1C[1C[P[11C [12D1 -o program[11D[?1l>[?2004l[2B]2;clang++ *.cpp -g -O1 -o program; ls -G -l program]1;clang++-rwxr-xr-x@ 1 msdprogram  staff  69560 Jan 22 20:19 [31mprogram[39;49m[0m
+[1m[7m%[27m[1m[0m                                                                     ]2;msdprogram@Badrs-MacBook-Air:~/Desktop/MSD-repo-spring2026/cs6015/week3/lab3/buggyCode]1;..ab3/buggyCode]7;file://Badrs-MacBook-Air.local/Users/msdprogram/Desktop/MSD-repo-spring2026/cs6015/week3/lab3/buggyCode\[0m[27m[24m[J[01;32m➜  [36mbuggyCode[00m [01;34mgit:([31mmain[34m) [33m✗[00m [K[?1h=[?2004h[7mclang++ *.cpp -g -O0 -o program[27m
+[K[A[26C[27mc[27ml[27ma[27mn[27mg[27m+[27m+[27m [27m*[27m.[27mc[27mp[27mp[27m [27m-[27mg[27m [27m-[27mO[27m0[27m [27m-[27mo[27m [27mp[27mr[27mo[27mg[27mr[27ma[27mm[1B[K[A[26C[?1l>[?2004l[1B
+]2;clang++ *.cpp -g -O0 -o program]1;clang++[1m[7m%[27m[1m[0m                                                                     ]2;msdprogram@Badrs-MacBook-Air:~/Desktop/MSD-repo-spring2026/cs6015/week3/lab3/buggyCode]1;..ab3/buggyCode]7;file://Badrs-MacBook-Air.local/Users/msdprogram/Desktop/MSD-repo-spring2026/cs6015/week3/lab3/buggyCode\[0m[27m[24m[J[01;32m➜  [36mbuggyCode[00m [01;34mgit:([31mmain[34m) [33m✗[00m [K[?1h=[?2004hlls -l program[?1l>[?2004l
+]2;ls -G -l program]1;ls-rwxr-xr-x@ 1 msdprogram  staff  213944 Jan 22 20:21 [31mprogram[39;49m[0m
+[1m[7m%[27m[1m[0m                                                                     ]2;msdprogram@Badrs-MacBook-Air:~/Desktop/MSD-repo-spring2026/cs6015/week3/lab3/buggyCode]1;..ab3/buggyCode]7;file://Badrs-MacBook-Air.local/Users/msdprogram/Desktop/MSD-repo-spring2026/cs6015/week3/lab3/buggyCode\[0m[27m[24m[J[01;32m➜  [36mbuggyCode[00m [01;34mgit:([31mmain[34m) [33m✗[00m [K[?1h=[?2004hls -l program[13Dclang++ *.cpp -g -O0 -o program
+[K[A[57C[1B[K[A[56C[1C[1C[P[10C [11D[P[10C [11D[P[10C [11D[P[9C [11D[P[10C [11D[P[10C [11D[P[9C [11D[?1l>[?2004l[1B
+]2;clang++ *.cpp -o program]1;clang++[1m[7m%[27m[1m[0m                                                                     ]2;msdprogram@Badrs-MacBook-Air:~/Desktop/MSD-repo-spring2026/cs6015/week3/lab3/buggyCode]1;..ab3/buggyCode]7;file://Badrs-MacBook-Air.local/Users/msdprogram/Desktop/MSD-repo-spring2026/cs6015/week3/lab3/buggyCode\[0m[27m[24m[J[01;32m➜  [36mbuggyCode[00m [01;34mgit:([31mmain[34m) [33m✗[00m [K[?1h=[?2004hlls -l program[?1l>[?2004l
+]2;ls -G -l program]1;ls-rwxr-xr-x@ 1 msdprogram  staff  167240 Jan 22 20:22 [31mprogram[39;49m[0m
+[1m[7m%[27m[1m[0m                                                                     ]2;msdprogram@Badrs-MacBook-Air:~/Desktop/MSD-repo-spring2026/cs6015/week3/lab3/buggyCode]1;..ab3/buggyCode]7;file://Badrs-MacBook-Air.local/Users/msdprogram/Desktop/MSD-repo-spring2026/cs6015/week3/lab3/buggyCode\[0m[27m[24m[J[01;32m➜  [36mbuggyCode[00m [01;34mgit:([31mmain[34m) [33m✗[00m [K[?1h=[?2004hls -l program[13Dclang++ *.cpp -o program
+[K[A[50C[1B[K[A[49C[1C-o program[10Dg-o program[10D -o program[10D[1C-o program[10Do-o program[10D1-o program[10D -o program[10D[?1l>[?2004l[1B
+]2;clang++ *.cpp -g -o1 -o program]1;clang++[1m[7m%[27m[1m[0m                                                                     ]2;msdprogram@Badrs-MacBook-Air:~/Desktop/MSD-repo-spring2026/cs6015/week3/lab3/buggyCode]1;..ab3/buggyCode]7;file://Badrs-MacBook-Air.local/Users/msdprogram/Desktop/MSD-repo-spring2026/cs6015/week3/lab3/buggyCode\[0m[27m[24m[J[01;32m➜  [36mbuggyCode[00m [01;34mgit:([31mmain[34m) [33m✗[00m [K[?1h=[?2004hlls = -l program [?1l>[?2004l
+]2;ls -G -l program]1;ls-rwxr-xr-x@ 1 msdprogram  staff  213944 Jan 22 20:23 [31mprogram[39;49m[0m
+[1m[7m%[27m[1m[0m                                                                     ]2;msdprogram@Badrs-MacBook-Air:~/Desktop/MSD-repo-spring2026/cs6015/week3/lab3/buggyCode]1;..ab3/buggyCode]7;file://Badrs-MacBook-Air.local/Users/msdprogram/Desktop/MSD-repo-spring2026/cs6015/week3/lab3/buggyCode\[0m[27m[24m[J[01;32m➜  [36mbuggyCode[00m [01;34mgit:([31mmain[34m) [33m✗[00m [K[?1h=[?2004hls -l program [14Dclang++ *.cpp -g -o1 -o program
+[K[A[57C[1B[K[A[56C[P[11C [12D2 -o program[11D[?1l>[?2004l[1B
+]2;clang++ *.cpp -g -o2 -o program]1;clang++[1m[7m%[27m[1m[0m                                                                     ]2;msdprogram@Badrs-MacBook-Air:~/Desktop/MSD-repo-spring2026/cs6015/week3/lab3/buggyCode]1;..ab3/buggyCode]7;file://Badrs-MacBook-Air.local/Users/msdprogram/Desktop/MSD-repo-spring2026/cs6015/week3/lab3/buggyCode\[0m[27m[24m[J[01;32m➜  [36mbuggyCode[00m [01;34mgit:([31mmain[34m) [33m✗[00m [K[?1h=[?2004hlls -l program [?1l>[?2004l
+]2;ls -G -l program]1;ls-rwxr-xr-x@ 1 msdprogram  staff  213944 Jan 22 20:23 [31mprogram[39;49m[0m
+[1m[7m%[27m[1m[0m                                                                     ]2;msdprogram@Badrs-MacBook-Air:~/Desktop/MSD-repo-spring2026/cs6015/week3/lab3/buggyCode]1;..ab3/buggyCode]7;file://Badrs-MacBook-Air.local/Users/msdprogram/Desktop/MSD-repo-spring2026/cs6015/week3/lab3/buggyCode\[0m[27m[24m[J[01;32m➜  [36mbuggyCode[00m [01;34mgit:([31mmain[34m) [33m✗[00m [K[?1h=[?2004hls -l program [14Dclang++ *.cpp -g -o2 -o program
+[K[A[57C[1B[K[A[56C[P[12C [13DO2 -o program[12D[?1l>[?2004l[1B
+]2;clang++ *.cpp -g -O2 -o program]1;clang++[1m[7m%[27m[1m[0m                                                                     ]2;msdprogram@Badrs-MacBook-Air:~/Desktop/MSD-repo-spring2026/cs6015/week3/lab3/buggyCode]1;..ab3/buggyCode]7;file://Badrs-MacBook-Air.local/Users/msdprogram/Desktop/MSD-repo-spring2026/cs6015/week3/lab3/buggyCode\[0m[27m[24m[J[01;32m➜  [36mbuggyCode[00m [01;34mgit:([31mmain[34m) [33m✗[00m [K[?1h=[?2004hlls -l program [?1l>[?2004l
+]2;ls -G -l program]1;ls-rwxr-xr-x@ 1 msdprogram  staff  68920 Jan 22 20:24 [31mprogram[39;49m[0m
+[1m[7m%[27m[1m[0m                                                                     ]2;msdprogram@Badrs-MacBook-Air:~/Desktop/MSD-repo-spring2026/cs6015/week3/lab3/buggyCode]1;..ab3/buggyCode]7;file://Badrs-MacBook-Air.local/Users/msdprogram/Desktop/MSD-repo-spring2026/cs6015/week3/lab3/buggyCode\[0m[27m[24m[J[01;32m➜  [36mbuggyCode[00m [01;34mgit:([31mmain[34m) [33m✗[00m [K[?1h=[?2004hls -l program [14Dclang++ *.cpp -g -O2 -o program
+[K[A[57C[1B[K[A[56C[P[11C [12Dq -o program[11D[P[11C [12D1 -o program[11D[?1l>[?2004l[1B
+]2;clang++ *.cpp -g -O1 -o program]1;clang++ls [1m[7m%[27m[1m[0m                                                                     ]2;msdprogram@Badrs-MacBook-Air:~/Desktop/MSD-repo-spring2026/cs6015/week3/lab3/buggyCode]1;..ab3/buggyCode]7;file://Badrs-MacBook-Air.local/Users/msdprogram/Desktop/MSD-repo-spring2026/cs6015/week3/lab3/buggyCode\[0m[27m[24m[J[01;32m➜  [36mbuggyCode[00m [01;34mgit:([31mmain[34m) [33m✗[00m [K[?1h=[?2004hlls 0 -l program [?1l>[?2004l
+]2;ls -G -l program]1;ls-rwxr-xr-x@ 1 msdprogram  staff  69560 Jan 22 20:24 [31mprogram[39;49m[0m
+[1m[7m%[27m[1m[0m                                                                     ]2;msdprogram@Badrs-MacBook-Air:~/Desktop/MSD-repo-spring2026/cs6015/week3/lab3/buggyCode]1;..ab3/buggyCode]7;file://Badrs-MacBook-Air.local/Users/msdprogram/Desktop/MSD-repo-spring2026/cs6015/week3/lab3/buggyCode\[0m[27m[24m[J[01;32m➜  [36mbuggyCode[00m [01;34mgit:([31mmain[34m) [33m✗[00m [K[?1h=[?2004h[7mclang++ *.cpp -g -O0 -o program[27m
+[K[A[26C[27mc[27ml[27ma[27mn[27mg[27m+[27m+[27m [27m*[27m.[27mc[27mp[27mp[27m [27m-[27mg[27m [27m-[27mO[27m0[27m [27m-[27mo[27m [27mp[27mr[27mo[27mg[27mr[27ma[27mm[1B[K[?1l>[?2004l
+]2;clang++ *.cpp -g -O0 -o program]1;clang++[1m[7m%[27m[1m[0m                                                                     ]2;msdprogram@Badrs-MacBook-Air:~/Desktop/MSD-repo-spring2026/cs6015/week3/lab3/buggyCode]1;..ab3/buggyCode]7;file://Badrs-MacBook-Air.local/Users/msdprogram/Desktop/MSD-repo-spring2026/cs6015/week3/lab3/buggyCode\[0m[27m[24m[J[01;32m➜  [36mbuggyCode[00m [01;34mgit:([31mmain[34m) [33m✗[00m [K[?1h=[?2004hlls -l program [?1l>[?2004l
+]2;ls -G -l program]1;ls-rwxr-xr-x@ 1 msdprogram  staff  213944 Jan 22 20:25 [31mprogram[39;49m[0m
+[1m[7m%[27m[1m[0m                                                                     ]2;msdprogram@Badrs-MacBook-Air:~/Desktop/MSD-repo-spring2026/cs6015/week3/lab3/buggyCode]1;..ab3/buggyCode]7;file://Badrs-MacBook-Air.local/Users/msdprogram/Desktop/MSD-repo-spring2026/cs6015/week3/lab3/buggyCode\[0m[27m[24m[J[01;32m➜  [36mbuggyCode[00m [01;34mgit:([31mmain[34m) [33m✗[00m [K[?1h=[?2004hllldb program [?1l>[?2004l
+]2;lldb program]1;lldb(lldb) target create "program"
+[2mLocating external symbol file: program...[0m[K[2K[2mLocating external symbol file: program...[0m[K[2K[2mLoading DWARF5 index: program...[0m[K[2K[2mLocating external symbol file: libc++.1.dylib...[0m[K[2K[2mLocating external symbol file: libc++.1.dylib...[0m[K[2K[2mParsing symbol table: libSystem.B.dylib...[0m[K[2K[2KCurrent executable set to '/Users/msdprogram/Desktop/MSD-repo-spring2026/cs6015/week3/lab3/buggyCode/program' (arm64).
+(lldb) [1G[2m(lldb) [0m[8Gb employeeClass.cpp [1G[2m(lldb) [0m[28G[1G[2m(lldb) [0m[27G:12
+Breakpoint 1: 2 locations.
+(lldb) [1G[2m(lldb) [0m[8Grun
+Process 27955 launched: '/Users/msdprogram/Desktop/MSD-repo-spring2026/cs6015/week3/lab3/buggyCode/program' (arm64)
+Process 27955 stopped
+* thread #1, queue = [32m'com.apple.main-thread'[0m, stop reason = [31mbreakpoint 1.2[0m
+    frame #0: [33m0x0000000100008488[0m program`Employee::Employee(this=0x000000016fdfe5a0, nme="Josh", id=1, jbTtle="Technology Specialist", slry=3000, yr=2015) at [36memployeeClass.cpp[0m:[33m13[0m:[33m76[0m
+[33m  [0m 10  	}
+[33m  [0m 11  	
+[33m  [0m 12  	[35m/* Constructor w/ parameters */[0m
+[33m->[0m 13  	Employee::Employee(string nme, [32mint[0m id, string jbTtle, [32mdouble[0m slry, [32mint[0m yr) [4m{[0m
+[33m  [0m 14  		name = nme;
+[33m  [0m 15  	
+[33m  [0m 16  	    [32mif[0m (id > [31m0[0m)
+Target 0: (program) stopped.
+(lldb) [1G[2m(lldb) [0m[8Gn
+Process 27955 stopped
+* thread #1, queue = [32m'com.apple.main-thread'[0m, stop reason = [31mbreakpoint 1.1[0m
+    frame #0: [33m0x0000000100008340[0m program`Employee::Employee(this=0x000000016fdfe5a0, nme="Josh", id=1, jbTtle="Technology Specialist", slry=3000, yr=2015) at [36memployeeClass.cpp[0m:[33m13[0m:[33m11[0m
+[33m  [0m 10  	}
+[33m  [0m 11  	
+[33m  [0m 12  	[35m/* Constructor w/ parameters */[0m
+[33m->[0m 13  	Employee::[4mEmployee[0m(string nme, [32mint[0m id, string jbTtle, [32mdouble[0m slry, [32mint[0m yr) {
+[33m  [0m 14  		name = nme;
+[33m  [0m 15  	
+[33m  [0m 16  	    [32mif[0m (id > [31m0[0m)
+Target 0: (program) stopped.
+(lldb) [1G[2m(lldb) [0m[8Gn
+Process 27955 stopped
+* thread #1, queue = [32m'com.apple.main-thread'[0m, stop reason = [31mstep over[0m
+    frame #0: [33m0x0000000100008364[0m program`Employee::Employee(this=0x000000016fdfe5a0, nme="Josh", id=1, jbTtle="Technology Specialist", slry=3000, yr=2015) at [36memployeeClass.cpp[0m:[33m14[0m:[33m7[0m
+[33m  [0m 11  	
+[33m  [0m 12  	[35m/* Constructor w/ parameters */[0m
+[33m  [0m 13  	Employee::Employee(string nme, [32mint[0m id, string jbTtle, [32mdouble[0m slry, [32mint[0m yr) {
+[33m->[0m 14  		name [4m=[0m nme;
+[33m  [0m 15  	
+[33m  [0m 16  	    [32mif[0m (id > [31m0[0m)
+[33m  [0m 17  	        ID = [31m0[0m;
+Target 0: (program) stopped.
+(lldb) [1G[2m(lldb) [0m[8Gn
+Process 27955 stopped
+* thread #1, queue = [32m'com.apple.main-thread'[0m, stop reason = [31mstep over[0m
+    frame #0: [33m0x000000010000836c[0m program`Employee::Employee(this=0x000000016fdfe5a0, nme="Josh", id=1, jbTtle="Technology Specialist", slry=3000, yr=2015) at [36memployeeClass.cpp[0m:[33m16[0m:[33m9[0m
+[33m  [0m 13  	Employee::Employee(string nme, [32mint[0m id, string jbTtle, [32mdouble[0m slry, [32mint[0m yr) {
+[33m  [0m 14  		name = nme;
+[33m  [0m 15  	
+[33m->[0m 16  	    [32mif[0m ([4mid[0m > [31m0[0m)
+[33m  [0m 17  	        ID = [31m0[0m;
+[33m  [0m 18  	    [32melse[0m
+[33m  [0m 19  	        ID = id;
+Target 0: (program) stopped.
+(lldb) [1G[2m(lldb) [0m[8Gp id
+(int) 1
+(lldb) [1G[2m(lldb) [0m[8Gp ID
+(int) 125312
+(lldb) [1G[2m(lldb) [0m[8Gexit
+Quitting LLDB will kill one or more processes. Do you really want to  proceed: [Y/n] y
+[1m[7m%[27m[1m[0m                                                                     ]2;msdprogram@Badrs-MacBook-Air:~/Desktop/MSD-repo-spring2026/cs6015/week3/lab3/buggyCode]1;..ab3/buggyCode]7;file://Badrs-MacBook-Air.local/Users/msdprogram/Desktop/MSD-repo-spring2026/cs6015/week3/lab3/buggyCode\[0m[27m[24m[J[01;32m➜  [36mbuggyCode[00m [01;34mgit:([31mmain[34m) [33m✗[00m [K[?1h=[?2004h[7mclang++ *.cpp -g -O0 -o program[27m
+[K[A[26C[27mc[27ml[27ma[27mn[27mg[27m+[27m+[27m [27m*[27m.[27mc[27mp[27mp[27m [27m-[27mg[27m [27m-[27mO[27m0[27m [27m-[27mo[27m [27mp[27mr[27mo[27mg[27mr[27ma[27mm[1B[K[A[26C[?1l>[?2004l[1B
+]2;clang++ *.cpp -g -O0 -o program]1;clang++[1m[7m%[27m[1m[0m                                                                     ]2;msdprogram@Badrs-MacBook-Air:~/Desktop/MSD-repo-spring2026/cs6015/week3/lab3/buggyCode]1;..ab3/buggyCode]7;file://Badrs-MacBook-Air.local/Users/msdprogram/Desktop/MSD-repo-spring2026/cs6015/week3/lab3/buggyCode\[0m[27m[24m[J[01;32m➜  [36mbuggyCode[00m [01;34mgit:([31mmain[34m) [33m✗[00m [K[?1h=[?2004hllldb program [?1l>[?2004l
+]2;lldb program]1;lldb(lldb) target create "program"
+[2mLocating external symbol file: program...[0m[K[2K[2mLocating external symbol file: program...[0m[K[2K[2mLoading DWARF5 index: program...[0m[K[2K[2mLocating external symbol file: libc++.1.dylib...[0m[K[2K[2mLocating external symbol file: libc++.1.dylib...[0m[K[2K[2KCurrent executable set to '/Users/msdprogram/Desktop/MSD-repo-spring2026/cs6015/week3/lab3/buggyCode/program' (arm64).
+(lldb) [1G[2m(lldb) [0m[8Gb employeeClass.cpp [1G[2m(lldb) [0m[28G[1G[2m(lldb) [0m[27G:16
+Breakpoint 1: where = program`Employee::Employee(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>, int, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>, double, int) + 104 at employeeClass.cpp:17:9, address = 0x000000010000836c
+(lldb) [1G[2m(lldb) [0m[8Grun 
+Process 28087 launched: '/Users/msdprogram/Desktop/MSD-repo-spring2026/cs6015/week3/lab3/buggyCode/program' (arm64)
+Process 28087 stopped
+* thread #1, queue = [32m'com.apple.main-thread'[0m, stop reason = [31mbreakpoint 1.1[0m
+    frame #0: [33m0x000000010000836c[0m program`Employee::Employee(this=0x000000016fdfe5a0, nme="Josh", id=1, jbTtle="Technology Specialist", slry=3000, yr=2015) at [36memployeeClass.cpp[0m:[33m17[0m:[33m9[0m
+[33m  [0m 14  		name = nme;
+[33m  [0m 15  	
+[33m  [0m 16  		[35m// bug here[0m
+[33m->[0m 17  	    [32mif[0m ([4mid[0m < [31m0[0m)
+[33m  [0m 18  	        ID = [31m0[0m;
+[33m  [0m 19  	    [32melse[0m
+[33m  [0m 20  	        ID = id;
+Target 0: (program) stopped.
+(lldb) [1G[2m(lldb) [0m[8Gn 
+Process 28087 stopped
+* thread #1, queue = [32m'com.apple.main-thread'[0m, stop reason = [31mstep over[0m
+    frame #0: [33m0x00000001000083b8[0m program`Employee::Employee(this=0x000000016fdfe5a0, nme="Josh", id=1, jbTtle="Technology Specialist", slry=3000, yr=2015) at [36memployeeClass.cpp[0m:[33m20[0m:[33m14[0m
+[33m  [0m 17  	    [32mif[0m (id < [31m0[0m)
+[33m  [0m 18  	        ID = [31m0[0m;
+[33m  [0m 19  	    [32melse[0m
+[33m->[0m 20  	        ID = [4mid[0m;
+[33m  [0m 21  	
+[33m  [0m 22  		jobTitle = jbTtle;
+[33m  [0m 23  	
+Target 0: (program) stopped.
+(lldb) [1G[2m(lldb) [0m[8Gp id 
+(int) 1
+(lldb) [1G[2m(lldb) [0m[8Gp ID
+(int) 125312
+(lldb) [1G[2m(lldb) [0m[8Gn 
+Process 28087 stopped
+* thread #1, queue = [32m'com.apple.main-thread'[0m, stop reason = [31mstep over[0m
+    frame #0: [33m0x00000001000083cc[0m program`Employee::Employee(this=0x000000016fdfe5a0, nme="Josh", id=1, jbTtle="Technology Specialist", slry=3000, yr=2015) at [36memployeeClass.cpp[0m:[33m22[0m:[33m2[0m
+[33m  [0m 19  	    [32melse[0m
+[33m  [0m 20  	        ID = id;
+[33m  [0m 21  	
+[33m->[0m 22  		[4mjobTitle[0m = jbTtle;
+[33m  [0m 23  	
+[33m  [0m 24  		(slry > [31m0[0m) ? salary = slry : salary = [31m0.00[0m;
+[33m  [0m 25  		(yr > [31m0[0m) ? HireYear = yr : HireYear = [31m2018[0m;
+Target 0: (program) stopped.
+(lldb) [1G[2m(lldb) [0m[8Gp ID
+(int) 1
+(lldb) [1G[2m(lldb) [0m[8Gexit
+Quitting LLDB will kill one or more processes. Do you really want to  proceed: [Y/n] y
+[1m[7m%[27m[1m[0m                                                                     ]2;msdprogram@Badrs-MacBook-Air:~/Desktop/MSD-repo-spring2026/cs6015/week3/lab3/buggyCode]1;..ab3/buggyCode]7;file://Badrs-MacBook-Air.local/Users/msdprogram/Desktop/MSD-repo-spring2026/cs6015/week3/lab3/buggyCode\[0m[27m[24m[J[01;32m➜  [36mbuggyCode[00m [01;34mgit:([31mmain[34m) [33m✗[00m [K[?1h=[?2004hlldb program [13Dclang++ *.cpp -g -O0 -o program
+[K[A[57C[31Dlldb program                   [1B[K[A[39C[13Dls -l program [14Dlldb[P[9C [13Dclang++ *.cpp -g -O0 -o program[1B[K[A[57C[1B[K[A[57C[?1l>[?2004l[1B
+]2;clang++ *.cpp -g -O0 -o program]1;clang++[1m[7m%[27m[1m[0m                                                                     ]2;msdprogram@Badrs-MacBook-Air:~/Desktop/MSD-repo-spring2026/cs6015/week3/lab3/buggyCode]1;..ab3/buggyCode]7;file://Badrs-MacBook-Air.local/Users/msdprogram/Desktop/MSD-repo-spring2026/cs6015/week3/lab3/buggyCode\[0m[27m[24m[J[01;32m➜  [36mbuggyCode[00m [01;34mgit:([31mmain[34m) [33m✗[00m [K[?1h=[?2004h../program[?1l>[?2004l
+]2;./program]1;./program  Here is the List of all the Staff in the R&D Department: 
+  ------------------------------------------------------------
+   Name  ID          Title            Salary   Year Hired  Supervisor  ProjectID Prog.Lang. #Exp Years
+
+   Josh   1   Technology Specialist   3000.00      2015
+
+   Mary   2         Project Manager   5500.00      2010
+
+   Marc   3    Research Team Leader   8000.00      2007
+
+   Mike  11        Multimedia Prog.   2500.00      2014
+
+  Julie  12     Mainframe Sys.Prog.   2150.00      2013
+
+ Albert  13                OS Prog.   2300.00      2015
+
+   John  21    Senior Software Eng.   4899.00      2011
+
+ Connor  24      Software Developer   1900.00      2017
+  Here is the List of all the Staff in the IT Department: 
+  ------------------------------------------------------------
+   Name  ID          Title            Salary   Year Hired  Supervisor  ProjectID Prog.Lang. #Exp Years
+
+    Roy  32           Network Prog.   1900.00      2016
+
+   Jane  35                  Tester   1500.00      2018
+
+ Removing Mike from the company: Succeeded
+ -------------------------------
+   Name  ID          Title            Salary   Year Hired  Supervisor  ProjectID Prog.Lang. #Exp Years
+
+   Josh   1   Technology Specialist   3000.00      2015
+
+   Mary   2         Project Manager   5500.00      2010
+
+   Marc   3    Research Team Leader   8000.00      2007
+
+  Julie  12     Mainframe Sys.Prog.   2150.00      2013
+
+ Albert  13                OS Prog.   2300.00      2015
+
+   John  21    Senior Software Eng.   4899.00      2011
+
+ Connor  24      Software Developer   1900.00      2017
+
+  Here is the List of all the Programmers who know C++ in the R&D Department: 
+  ---------------------------------------------------------------------------
+   Name  ID          Title            Salary   Year Hired  Supervisor  ProjectID Prog.Lang. #Exp Years
+
+  Julie  12     Mainframe Sys.Prog.   2150.00      2013      Mary         5         C++
+
+ Albert  13                OS Prog.   2300.00      2015      Mary         9         C++
+
+ Listing All Project IDs:  5 9 6 8
+-------------------------
+The Highest R&D Employee Salary is: 8000.00
+The Highest R&D Programmer Salary is: 2300.00
+The Highest R&D Software Architect Salary is: 1900.00
+
+The Average R&D Employee Salary is: 2666
+The Average R&D Programmer Salary is: 1150
+The Average R&D Software Architect Salary is: 3399
+
+The Average IT Employee Salary is: 0
+The Average IT Programmer Salary is: 750
+The Average IT Software Architect Salary is: 0
+
+[1m[7m%[27m[1m[0m                                                                     ]2;msdprogram@Badrs-MacBook-Air:~/Desktop/MSD-repo-spring2026/cs6015/week3/lab3/buggyCode]1;..ab3/buggyCode]7;file://Badrs-MacBook-Air.local/Users/msdprogram/Desktop/MSD-repo-spring2026/cs6015/week3/lab3/buggyCode\[0m[27m[24m[J[01;32m➜  [36mbuggyCode[00m [01;34mgit:([31mmain[34m) [33m✗[00m [K[?1h=[?2004h../ program .  > my_output.txt[?1l>[?2004l
+]2;./program > my_output.txt]1;./program[1m[7m%[27m[1m[0m                                                                     ]2;msdprogram@Badrs-MacBook-Air:~/Desktop/MSD-repo-spring2026/cs6015/week3/lab3/buggyCode]1;..ab3/buggyCode]7;file://Badrs-MacBook-Air.local/Users/msdprogram/Desktop/MSD-repo-spring2026/cs6015/week3/lab3/buggyCode\[0m[27m[24m[J[01;32m➜  [36mbuggyCode[00m [01;34mgit:([31mmain[34m) [33m✗[00m [K[?1h=[?2004h
