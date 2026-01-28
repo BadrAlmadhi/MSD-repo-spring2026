@@ -18,7 +18,7 @@ public:
 	string getSupervisorName() const;
 	int getProjectID() const;
 	string getProgLanguage() const;
-	void print();
+	void print() override;
 };
 
 #endif /* PROGRAMMERCLASS_H_ */
