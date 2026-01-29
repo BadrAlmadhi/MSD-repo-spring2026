@@ -17,7 +17,7 @@ Department::Department(string N, int id)
 	Programmers = new vector <Programmer>();
 	SoftwareArchitects = new vector<SoftwareArchitect>();
 	Name = N;
-	(id > 0) ? ID = -1 : ID = id;
+	ID = (id > 0) ? id : 0;
 }
 
 double Department::CalculateMaxSalary(StaffTypes type)
@@ -54,7 +54,7 @@ double Department::CalculateMaxSalary(StaffTypes type)
 			{
                 max = SoftwareArchitects->at(i).getSalary();
 			}
-                max = SoftwareArchitects->at(i).getSalary();
+                // max = SoftwareArchitects->at(i).getSalary(); // extra line
 		}
 		break;
 	default:
@@ -66,35 +66,37 @@ double Department::CalculateMaxSalary(StaffTypes type)
 
 int Department::CalculateAverageSalary(StaffTypes type)
 {
-    double sum;
-	sum = 0.0;
+    double sum = 0.0;
 	int i;
+
 	switch (type)
 	{
-	case Department::EMPLOYEE:		
+	case Department::EMPLOYEE:	
+		if (Employees->size() == 0) return 0;	
 		for (i = 0; i < Employees->size(); i++)
 		{
-			sum = Employees->at(i).getSalary();
+			// fixed bug here this overwrite sum
+			sum += Employees->at(i).getSalary();
 		}
-		break;
+		return (int)(sum / Employees->size());
 	case Department::PROGRAMMER:
+		if (Programmers->size() == 0) return 0;
 		for (i = 0; i < Programmers->size(); i++)
 		{
-			sum = Programmers->at(i).getSalary();
+			// fixed bug here += 
+			sum += Programmers->at(i).getSalary();
 		}
-		break;
+		return (int)(sum / Programmers->size());
 	case Department::SOFTWAREARCHITECTS:
+	if (SoftwareArchitects->size() == 0) return 0;
 		for (i = 0; i < SoftwareArchitects->size(); i++)
 		{
 			sum += SoftwareArchitects->at(i).getSalary();
 		}
-		break;
-	default:
-		sum = -1;
-		break;
+		return(int)(sum / SoftwareArchitects->size());
 	}
 
-    return sum/i;
+    return 0;
 }
 
 vector<Employee*> *Department::getAllStaff()
@@ -162,7 +164,8 @@ vector<int>* Department::getAllProjectIDs()
     int i;
     for ( i=0; i < Programmers->size(); i++)
 	{
-		if (!checkID(Programmers->at(i).getID(), result))
+		// getProjectID was missing replaced getID with getProjectID
+		if (!checkID(Programmers->at(i).getProjectID(), result))
 		{
             result->push_back(Programmers->at(i).getProjectID());
 		}
