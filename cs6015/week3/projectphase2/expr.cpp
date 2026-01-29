@@ -1,4 +1,5 @@
 #include "expr.h"
+#include <stdexcept>
 
 // implementing the declared function from .h
 // constructor assign val1
@@ -18,9 +19,38 @@ bool Num::equals(Expr* e) {
     return this->val == other->val;
 }
 
+int Num::interp() {
+    return this->val;
+}
+
+bool Num::has_variable() {
+    return false;
+}
+
+Expr* Num::subst(std::string, Expr*) {
+    // return new Num(this->val);
+    return this; // we could use new but we already has the value saved. 
+}
+
 // 
 Var::Var(std::string name) {
     this->name = name;
+}
+
+int Var::interp() {
+    throw std::runtime_error("Variable cannot be interpreted without a value.");
+}
+
+bool Var::has_variable() {
+    return true;
+}
+
+Expr* Var::subst(std::string var, Expr* expr) {
+    if (this->name == var) {
+        return expr;
+    } else {
+        return this; // we already have the value saved in this. so we can just return the value instead of creating new value.
+    }
 }
 
 // same concept 
@@ -38,6 +68,23 @@ Add::Add(Expr* lhs, Expr* rhs) {
     this->lhs = lhs;
     this->rhs = rhs;
 }
+
+int Add::interp() {
+    return lhs->interp() + rhs->interp();
+}
+
+bool Add::has_variable() {
+    if (lhs->has_variable() || rhs->has_variable()){
+        return true;
+    } else {
+        return false;
+    }
+}
+
+Expr* Add::subst(std::string var, Expr* expr) {
+    return new Add(lhs->subst(var, expr), rhs->subst(var, expr));
+}
+
 
 
 // then follow same concept but add both lhs and rhs
@@ -64,4 +111,17 @@ bool Mult::equals(Expr* e) {
 
     return this->lhs->equals(other->lhs) &&
            this->rhs->equals(other->rhs);
+}
+
+int Mult::interp () {
+
+    return lhs->interp() * rhs->interp();
+}
+
+bool Mult::has_variable() {
+    return lhs->has_variable() || rhs->has_variable();
+}
+
+Expr* Mult::subst(std::string var, Expr* expr) {
+    return new Mult(lhs->subst(var, expr), rhs->subst(var, expr));
 }

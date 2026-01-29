@@ -6,6 +6,9 @@ class Expr {
 public:
     virtual ~Expr() = default;
     virtual bool equals(Expr* e) = 0; // each subclass must override
+    virtual int interp() = 0;  // checks the value of expression 
+    virtual bool has_variable() = 0; // checks if expression has variables ("X") = true
+    virtual Expr* subst(std::string, Expr*) = 0; // replaces variable with expression
 };
 
 // Num represents number expression (leaf node in the tree)
@@ -17,6 +20,9 @@ public:
     Num(int val);
 
     bool equals(Expr* e) override;
+    int interp() override;
+    bool has_variable() override;
+    Expr* subst(std::string, Expr*) override;
 };
 
 // Var represents a variable expression (leaf node), e.g., "x"
@@ -28,6 +34,9 @@ public:
     Var(std::string name);
 
     bool equals(Expr* e) override;
+    int interp() override;
+    bool has_variable() override;
+    Expr* subst(std::string, Expr*) override;
 };
 
 // Add represents addition of two expressions
@@ -40,6 +49,9 @@ public:
     Add(Expr* lhs, Expr* rhs);
 
     bool equals(Expr* e) override;
+    int interp() override;
+    bool has_variable() override;
+    Expr* subst(std::string, Expr*) override;
 };
 
 // Mult represents multiplication of two expressions
@@ -52,4 +64,9 @@ public:
     Mult(Expr* lhs, Expr* rhs);
 
     bool equals(Expr* e) override;
+    int interp() override;
+    bool has_variable() override;
+    Expr* subst(std::string, Expr*) override;
 };
+
+
