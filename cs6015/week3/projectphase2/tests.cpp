@@ -1,6 +1,6 @@
 #include "catch.h"
 #include "expr.h"
-
+#include <sstream>
 
 // TEST_CASE("Description")
 TEST_CASE("Var equals examples") {
@@ -94,4 +94,45 @@ TEST_CASE("subst: no replacement when variable name doesn't match") {
     CHECK( (new Add(new Var("x"), new Num(1)))
            ->subst("y", new Num(99))
            ->equals(new Add(new Var("x"), new Num(1))) );
+}
+
+
+TEST_CASE("printExp: Num prints number with no extra cha") {
+    std::ostringstream out;
+    Expr* e = new Num(42);
+    e->printExp(out);
+
+    CHECK(out.str() == "42");
+}
+
+TEST_CASE("printExp: Var prints variable name") {
+    std::ostringstream out;
+    Expr* e = new Var("x");
+    e->printExp(out);
+
+    CHECK(out.str() == "x");
+}
+
+TEST_CASE("printExp: Add print with parentheses and +, no space"){
+    std::ostringstream out; 
+    Expr* e = new Add(new Num(1), new Num(2));
+
+    e->printExp(out);
+    CHECK(out.str() == "(1+2)");
+}
+
+TEST_CASE("printExp: Mult print with parentheses and + without space"){
+    std::ostringstream out;
+    Expr* e = new Mult(new Num(2), new Num(2));
+    e->printExp(out);
+
+    CHECK(out.str() == "(2*2)");
+
+}
+
+TEST_CASE("printExp: nested expressions") {
+    std::ostringstream out;
+    Expr* e = new Mult(new Add(new Num(1), new Num(2)), new Add(new Num(3), new Num(4)));
+    e->printExp(out);
+    CHECK(out.str() == "((1+2)*(3+4))");
 }

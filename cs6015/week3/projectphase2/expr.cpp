@@ -1,10 +1,18 @@
 #include "expr.h"
 #include <stdexcept>
+#include <ostream>
+
+
 
 // implementing the declared function from .h
 // constructor assign val1
 Num::Num(int val) {
     this->val = val;
+}
+
+
+void Num::printExp(std::ostream& out) {
+    out << val;
 }
 
 // are these two expression same kind?
@@ -35,6 +43,10 @@ Expr* Num::subst(std::string, Expr*) {
 // 
 Var::Var(std::string name) {
     this->name = name;
+}
+
+void Var::printExp(std::ostream& out) {
+    out << name;
 }
 
 int Var::interp() {
@@ -69,6 +81,14 @@ Add::Add(Expr* lhs, Expr* rhs) {
     this->rhs = rhs;
 }
 
+void Add::printExp(std::ostream& out) {
+    out << "(";
+    lhs->printExp(out);
+    out << "+";
+    rhs->printExp(out);
+    out << ")";
+}
+
 int Add::interp() {
     return lhs->interp() + rhs->interp();
 }
@@ -101,6 +121,14 @@ bool Add::equals(Expr* e) {
 Mult::Mult(Expr* lhs, Expr* rhs) {
     this->lhs = lhs;
     this->rhs = rhs;
+}
+
+void Mult::printExp(std::ostream& out) {
+    out << "(";
+    lhs->printExp(out);
+    out << "*";
+    rhs->printExp(out);
+    out << ")";
 }
 
 bool Mult::equals(Expr* e) {

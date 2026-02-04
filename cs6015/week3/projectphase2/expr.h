@@ -1,5 +1,6 @@
 #pragma once  // prevent header from being included multiple times
-#include <string> // for variables
+#include <string> // for string variables
+#include <ostream> // 
 
 // base class
 class Expr {
@@ -9,7 +10,7 @@ public:
     virtual int interp() = 0;  // checks the value of expression 
     virtual bool has_variable() = 0; // checks if expression has variables ("X") = true
     virtual Expr* subst(std::string, Expr*) = 0; // replaces variable with expression
-    
+    virtual void printExp (std::ostream& out) = 0; // print to stream instead of screen
 };
 
 // Num represents number expression (leaf node in the tree)
@@ -24,6 +25,8 @@ public:
     int interp() override;
     bool has_variable() override;
     Expr* subst(std::string, Expr*) override;
+    void printExp (std::ostream& out) override; 
+
 };
 
 // Var represents a variable expression (leaf node), e.g., "x"
@@ -38,6 +41,8 @@ public:
     int interp() override;
     bool has_variable() override;
     Expr* subst(std::string, Expr*) override;
+    void printExp (std::ostream& out) override; 
+
 };
 
 // Add represents addition of two expressions
@@ -53,6 +58,8 @@ public:
     int interp() override;
     bool has_variable() override;
     Expr* subst(std::string, Expr*) override;
+    void printExp (std::ostream& out) override; 
+
 };
 
 // Mult represents multiplication of two expressions
@@ -68,6 +75,8 @@ public:
     int interp() override;
     bool has_variable() override;
     Expr* subst(std::string, Expr*) override;
+    void printExp (std::ostream& out) override; 
+
 };
 
 
