@@ -9,6 +9,7 @@ public:
     virtual int interp() = 0;  // checks the value of expression 
     virtual bool has_variable() = 0; // checks if expression has variables ("X") = true
     virtual Expr* subst(std::string, Expr*) = 0; // replaces variable with expression
+    
 };
 
 // Num represents number expression (leaf node in the tree)
