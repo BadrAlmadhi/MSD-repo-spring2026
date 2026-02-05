@@ -1,0 +1,154 @@
+\doxysection{Expr Class Reference}
+\hypertarget{class_expr}{}\label{class_expr}\index{Expr@{Expr}}
+
+
+Abstract base class for all expression nodes.  
+
+
+
+
+{\ttfamily \+\#include $<$expr.\+h$>$}
+
+Inheritance diagram for Expr:\+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_expr}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+virtual \doxymbox{\hyperlink{class_expr_ad14272b4da43b43c6f6c8f897f320ffa}{\texorpdfstring{$\sim$}{\string~}\+Expr}} ()=default
+\item 
+virtual bool \doxymbox{\hyperlink{class_expr_abf9cdb765fb84304881789d273d7594f}{equals}} (\doxymbox{\hyperlink{class_expr}{Expr}} \texorpdfstring{$\ast$}{*}e)=0
+\begin{DoxyCompactList}\small\item\em the equals method is going to be useed to compare expressions if they are equal or not. \end{DoxyCompactList}\item 
+virtual int \doxymbox{\hyperlink{class_expr_aeba8585d8225419d49166371306542c1}{interp}} ()=0
+\begin{DoxyCompactList}\small\item\em Evaluate the \doxylink{class_expr}{Expr} and retrun its integer value. \end{DoxyCompactList}\item 
+virtual bool \doxymbox{\hyperlink{class_expr_a92dc26078993a4b9721ea732274a435c}{has\+\_\+variable}} ()=0
+\begin{DoxyCompactList}\small\item\em Checks if Expression contains any variables. \end{DoxyCompactList}\item 
+virtual \doxymbox{\hyperlink{class_expr}{Expr}} \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{class_expr_a36ff14b766e7d187d2600a01c1fe77e2}{subst}} (std::\+string, \doxymbox{\hyperlink{class_expr}{Expr}} \texorpdfstring{$\ast$}{*})=0
+\begin{DoxyCompactList}\small\item\em Substitute occurrences of a variable with another expression. \end{DoxyCompactList}\item 
+virtual void \doxymbox{\hyperlink{class_expr_a287276bc3f822ac6e25caafb65f77103}{print\+Exp}} (std::\+ostream \&out)=0
+\begin{DoxyCompactList}\small\item\em Print the expression to an output stream using concrete syntax. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Abstract base class for all expression nodes. 
+
+Subclasses must implement the core operation:\+ equals, interp, has\+\_\+variable, subst, and print\+Exp. 
+
+\label{doc-constructors}
+\Hypertarget{class_expr_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_expr_ad14272b4da43b43c6f6c8f897f320ffa}\index{Expr@{Expr}!````~Expr@{\texorpdfstring{$\sim$}{\string~}Expr}}
+\index{````~Expr@{\texorpdfstring{$\sim$}{\string~}Expr}!Expr@{Expr}}
+\doxysubsubsection{\texorpdfstring{\texorpdfstring{$\sim$}{\string~}Expr()}{\string~Expr()}}
+{\footnotesize\ttfamily \label{class_expr_ad14272b4da43b43c6f6c8f897f320ffa} 
+virtual Expr::\+\texorpdfstring{$\sim$}{\string~}\+Expr (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}, {\ttfamily [default]}}
+
+Setup \doxylink{class_expr}{Expr} as default 
+
+\label{doc-func-members}
+\Hypertarget{class_expr_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_expr_abf9cdb765fb84304881789d273d7594f}\index{Expr@{Expr}!equals@{equals}}
+\index{equals@{equals}!Expr@{Expr}}
+\doxysubsubsection{\texorpdfstring{equals()}{equals()}}
+{\footnotesize\ttfamily \label{class_expr_abf9cdb765fb84304881789d273d7594f} 
+virtual bool Expr::\+equals (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{class_expr}{Expr}} \texorpdfstring{$\ast$}{*}}]{e}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+the equals method is going to be useed to compare expressions if they are equal or not. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em e} & Expression to compare against. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if the two expression trees are equal. 
+\end{DoxyReturn}
+
+
+Implemented in \doxymbox{\hyperlink{class_add_a78f321a6b8799113d3fbcb7d975cc44b}{Add}}, \doxymbox{\hyperlink{class_mult_aa64da9a8fc6b019f8a2db6f813d9a4e6}{Mult}}, \doxymbox{\hyperlink{class_num_a07316c2897aadb9257b8de74dbfdcc03}{Num}}, and \doxymbox{\hyperlink{class_var_af0889cd60f10a3b3c7712f53023e7f5b}{Var}}.
+
+\Hypertarget{class_expr_a92dc26078993a4b9721ea732274a435c}\index{Expr@{Expr}!has\_variable@{has\_variable}}
+\index{has\_variable@{has\_variable}!Expr@{Expr}}
+\doxysubsubsection{\texorpdfstring{has\_variable()}{has\_variable()}}
+{\footnotesize\ttfamily \label{class_expr_a92dc26078993a4b9721ea732274a435c} 
+virtual bool Expr::\+has\+\_\+variable (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Checks if Expression contains any variables. 
+
+\begin{DoxyReturn}{Returns}
+true if any \doxylink{class_var}{Var} node exists inside the expression. 
+\end{DoxyReturn}
+
+
+Implemented in \doxymbox{\hyperlink{class_add_a1a829a6c1e949a57cd810e8a6e3c52d5}{Add}}, \doxymbox{\hyperlink{class_mult_a214c39d71da10d21bdbd7fbc70032357}{Mult}}, \doxymbox{\hyperlink{class_num_a24a51278e76d4b01b457fb5f521bcc38}{Num}}, and \doxymbox{\hyperlink{class_var_a8fdfa306660b048eff151d156b923dd6}{Var}}.
+
+\Hypertarget{class_expr_aeba8585d8225419d49166371306542c1}\index{Expr@{Expr}!interp@{interp}}
+\index{interp@{interp}!Expr@{Expr}}
+\doxysubsubsection{\texorpdfstring{interp()}{interp()}}
+{\footnotesize\ttfamily \label{class_expr_aeba8585d8225419d49166371306542c1} 
+virtual int Expr::\+interp (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Evaluate the \doxylink{class_expr}{Expr} and retrun its integer value. 
+
+
+
+Implemented in \doxymbox{\hyperlink{class_add_a571fab39592f2e11fc028c3af89d258d}{Add}}, \doxymbox{\hyperlink{class_mult_a0ae0098f4a1adaef9686983f263ab35a}{Mult}}, \doxymbox{\hyperlink{class_num_a0c55f8227dd834ec1961f745fce2d75e}{Num}}, and \doxymbox{\hyperlink{class_var_afb2ef9a9bc393b9c3afbe4a7b87caaeb}{Var}}.
+
+\Hypertarget{class_expr_a287276bc3f822ac6e25caafb65f77103}\index{Expr@{Expr}!printExp@{printExp}}
+\index{printExp@{printExp}!Expr@{Expr}}
+\doxysubsubsection{\texorpdfstring{printExp()}{printExp()}}
+{\footnotesize\ttfamily \label{class_expr_a287276bc3f822ac6e25caafb65f77103} 
+virtual void Expr::\+print\+Exp (\begin{DoxyParamCaption}\item[{std::\+ostream \&}]{out}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Print the expression to an output stream using concrete syntax. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em out} & Out\+Put stream \\
+\hline
+\end{DoxyParams}
+
+
+Implemented in \doxymbox{\hyperlink{class_add_ae754977805d18f814ce121bcb3bca4dc}{Add}}, \doxymbox{\hyperlink{class_mult_af5b9734bf4b507545d8ba139fd4f5cb3}{Mult}}, \doxymbox{\hyperlink{class_num_a217de1c2759187c421d17e794728d084}{Num}}, and \doxymbox{\hyperlink{class_var_ae1730faa8e11ea71037d8d3659de5423}{Var}}.
+
+\Hypertarget{class_expr_a36ff14b766e7d187d2600a01c1fe77e2}\index{Expr@{Expr}!subst@{subst}}
+\index{subst@{subst}!Expr@{Expr}}
+\doxysubsubsection{\texorpdfstring{subst()}{subst()}}
+{\footnotesize\ttfamily \label{class_expr_a36ff14b766e7d187d2600a01c1fe77e2} 
+virtual \doxymbox{\hyperlink{class_expr}{Expr}} \texorpdfstring{$\ast$}{*} Expr::\+subst (\begin{DoxyParamCaption}\item[{std::\+string}]{}{, }\item[{\doxymbox{\hyperlink{class_expr}{Expr}} \texorpdfstring{$\ast$}{*}}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Substitute occurrences of a variable with another expression. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em variable} & name to replace with another \doxylink{class_expr}{Expr} \\
+\hline
+{\em replacement} & the expression to substitute in place of that variable. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A (possibly) new expression tree with substitute applied. 
+\end{DoxyReturn}
+
+
+Implemented in \doxymbox{\hyperlink{class_add_a9d3ab553df732876c4c1be93eb23d11d}{Add}}, \doxymbox{\hyperlink{class_mult_abd609cf62c6736337e1c49cb7966ff7e}{Mult}}, \doxymbox{\hyperlink{class_num_a2a1d37476bb4ed031771f1c8e939a2c0}{Num}}, and \doxymbox{\hyperlink{class_var_a8c5e7f040faf9e88c2fda5dee927313b}{Var}}.
+
+
+
+The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{expr_8h}{expr.\+h}}\end{DoxyCompactItemize}
