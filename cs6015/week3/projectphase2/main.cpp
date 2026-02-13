@@ -1,27 +1,37 @@
-#include <cstring>   // strcmp
-#include <cstdlib>   // exit
-
 #define CATCH_CONFIG_RUNNER
 #include "catch.h"
 
+#include <cstring>
+#include <iostream>
+#include <string>
+#include "cmdline.h"
+#include "expr.hpp"
 
-// command in terminal
-int main(int argc, char** argv) {
-    // Check for --test
-    if (argc > 1 && std::strcmp(argv[1], "--test") == 0) {
-        // Run Catch tests WITHOUT the --test argument
-        int result = Catch::Session().run(argc - 1, argv + 1);
+int main (int argc, char* argv[]) {
 
-        if (result != 0) {
-            exit(1);   // assignment requirement
-        }
-        return 0;
-    }
+   // detect --test
+   bool run_test = false;
+   for (int i = 0; i < argc; i++) {
+      if (std::strcmp(argv[i], "--test") == 0) {
+         run_test = true;
+         break;
+      }
+   }
 
-    // Normal program mode (no tests)
-    return 0;
+   // if --test run Catch and Exit
+   if (run_test) {
+      int result = Catch::Session().run();
+      if (result != 0) exit(1);
+      return 0;
+   }
+
+
+   // otherwise normal program
+   use_arguments(argc, argv);
+   
+
+
+   return 0;
 }
-
-
 
 

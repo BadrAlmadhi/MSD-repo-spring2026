@@ -1,22 +1,25 @@
-OBJS = main.o expr.o tests.o
-
 CXX = clang++
-CXXFLAGS = -std=c++17 -Wall -Wextra -Werror -g
+CXXFLAGS = -std=c++17 -Wall -Wextra
 
-INCS = expr.h catch.h
+# Main program (includes tests)
+msdscript: main.o cmdline.o expr.o test.o
+	$(CXX) $(CXXFLAGS) main.o cmdline.o expr.o test.o -o msdscript
 
-msdscript: $(OBJS)
-	$(CXX) $(CXXFLAGS) -o msdscript $(OBJS)
-
-main.o: main.cpp $(INCS)
+main.o: main.cpp cmdline.h expr.hpp catch.h
 	$(CXX) $(CXXFLAGS) -c main.cpp
 
-expr.o: expr.cpp $(INCS)
+cmdline.o: cmdline.cpp cmdline.h
+	$(CXX) $(CXXFLAGS) -c cmdline.cpp
+
+expr.o: expr.cpp expr.hpp
 	$(CXX) $(CXXFLAGS) -c expr.cpp
 
-tests.o: tests.cpp $(INCS)
-	$(CXX) $(CXXFLAGS) -c tests.cpp
+# Tests
+test: test.o expr.o
+	$(CXX) $(CXXFLAGS) test.o expr.o -o test
 
-.PHONY: clean
+test.o: test.cpp catch.h expr.hpp
+	$(CXX) $(CXXFLAGS) -c test.cpp
+
 clean:
-	rm -rf *.o msdscript *.dSYM
+	rm -f *.o msdscript test
