@@ -7,38 +7,24 @@
 #include <iostream> // cout, cin
 
 
-void use_arguments(int argc, char* argv[]) {
-    bool seen_test = false; // we will use to check test
+run_mode_t use_arguments(int argc, char **argv) {
+    // We only accept exactly 1 flag after the program name.
+    // Example: ./msdscript --interp
+    if (argc != 2)
+        throw std::runtime_error("must supply exactly one flag");
 
-    // start from 1 because 0 is program name
-    for (int i = 1; i < argc; i++) {
-        
-        // point to stored variables each time loop runs
-        // arg values changes every time loop runs
-        const char* arg = argv[i]; 
-      // test  //std::cout << "arguments: " << arg << "\n";
+    if (std::strcmp(argv[1], "--test") == 0)
+        return do_test;
 
-      // if user typed --help after arg0 print help args
-      if (std::strcmp(arg, "--help") == 0) {
-        std::cout << "msdscript program uses:\n" 
-                  << " --help \n"
-                  << " --test \n";
-                  std::exit(0);
-      } else if (std::strcmp(arg, "--test") == 0) {
-        if (seen_test) {
-            std::cerr << "Error: --test runs multiple times\n";
-            std::exit(1);
-        } 
-        seen_test = true;
-        std::cout << "Test passed\n";
-      } else {
-        std::cerr << "Unkown arguments: " << arg << "\n";
-        std::exit(1);
-      }
-       
-        return;
-    }
+    if (std::strcmp(argv[1], "--interp") == 0)
+        return do_interp;
 
-return;
+    if (std::strcmp(argv[1], "--print") == 0)
+        return do_print;
+
+    if (std::strcmp(argv[1], "--pretty-print") == 0)
+        return do_pretty_print;
+
+    throw std::runtime_error("unknown flag");
 }
 
