@@ -1,0 +1,24 @@
+Report Test Generation
+
+Program msdscript0
+Mood:
+- - interp
+Input: (3 * 6)
+Bug: exit code not 0/1
+
+
+Program msdscript1
+Mood:
+- - interp
+Input: (3 * 6)
+Bug: Invalid input
+
+
+Program msdscript3
+Mood:
+- - interp
+Input: (10 + 10) printed (10*10)
+Bug: mismatch
+
+
+Everything else working fine
