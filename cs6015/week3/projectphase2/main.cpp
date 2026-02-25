@@ -14,10 +14,12 @@ int main(int argc, char **argv) {
         run_mode_t mode = use_arguments(argc, argv);
 
         switch (mode) {
-        case do_test:
+        case do_test:{
             // Run Catch2 tests.
             // Return 0 if all pass, non-zero otherwise.
-            return Catch::Session().run();
+            int rc = Catch::Session().run();
+            return (rc = 0) ? 0 : 1; // this now enforce 0/1 only
+        }
 
         case do_interp: {
             // Read an expression from stdin, parse it,
@@ -47,11 +49,12 @@ int main(int argc, char **argv) {
         // Should never get here, but keeps compiler happy
         return 1;
     }
-    catch (std::exception &ex) {
-        // Assignment says:
-        // - print error to STANDARD OUTPUT (std::cout)
-        // - exit with non-zero
-        std::cout << "Error: " << ex.what() << "\n";
+    catch (std::exception const& ex) {
+        std::cerr << ex.what() << "\n";
+        return 1;
+    }
+    catch (...) {
+        std::cerr << "unknown error\n";
         return 1;
     }
 }
