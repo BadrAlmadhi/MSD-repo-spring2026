@@ -1,3 +1,6 @@
+#define CATCH_CONFIG_MAIN
+
+
 #include "catch.h"      // must match your actual filename
 #include "expr.hpp"     // your project header
 

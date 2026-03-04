@@ -1,0 +1,36 @@
+#pragma once
+#include <string>
+
+// forward declaration 
+class Expr;
+
+class Val {
+    public:
+    virtual ~Val() = default;
+
+    // compare two values for structural equality
+    virtual bool equals(Val* other) = 0;
+
+    // operation add and mult 
+    virtual Val* add_to(Val* other) = 0;
+    virtual Val* mult_with(Val* other) = 0;
+
+    // print result of interp()
+    virtual std::string to_string() = 0;
+
+    // convert value back to expr
+    virtual Expr* to_expr() = 0;
+};
+
+class NumVal : public Val {
+    public:
+    int val;
+
+    explicit NumVal(int val);
+
+    virtual bool equals(Val* other) override;
+    virtual Val* add_to(Val* other) override;
+    virtual Val* mult_with(Val* other) override;
+    virtual std::string to_string() override;
+    virtual Expr* to_expr() override;
+};
