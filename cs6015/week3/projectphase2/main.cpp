@@ -7,6 +7,7 @@
 #include "cmdline.h"
 #include "expr.hpp"
 #include "parse.hpp"
+#include "val.h"
 
 int main(int argc, char **argv) {
     try {
@@ -22,26 +23,21 @@ int main(int argc, char **argv) {
         }
 
         case do_interp: {
-            // Read an expression from stdin, parse it,
-            // interpret it, and print the resulting value.
             Expr* e = parse(std::cin);
-            std::cout << e->interp() << "\n";
+            std::cout << e->interp()->to_string() << "\n";
             return 0;
         }
 
         case do_print: {
-            // Parse expression from stdin, then print it back using printExpr
             Expr* e = parse(std::cin);
-            e->printExpr(std::cout);
-            std::cout << "\n";
+            std::cout << e->to_string() << "\n";
             return 0;
         }
 
         case do_pretty_print: {
             // Parse expression from stdin, then pretty print it.
             Expr* e = parse(std::cin);
-            e->pretty_print(std::cout);
-            std::cout << "\n";
+            std::cout << e->to_pretty_string() << "\n";
             return 0;
         }
         }

@@ -12,6 +12,7 @@ typedef enum {
   prec_mult
 } precedence_t;
 
+class Val;
 // base class
 class Expr{
     public:
@@ -20,7 +21,7 @@ class Expr{
     virtual ~Expr() = default; 
     // = 0 forces every subclass to provide its own implementation
     virtual bool equals(Expr *e) = 0;
-    virtual int interp() = 0;
+    virtual Val* interp() = 0;
     virtual bool has_variable() = 0;
     virtual Expr* subst(std::string, Expr* e) = 0;
 
@@ -63,7 +64,7 @@ public:
     ExprNum(int value);
     
     bool equals(Expr* e) override;
-    int interp() override;
+    Val* interp() override;
     bool has_variable() override;
     Expr* subst(std::string s, Expr* e) override;
     void printExpr(std::ostream& out) override;
@@ -79,7 +80,7 @@ class ExprAdd : public Expr{
     ExprAdd(Expr* lhs, Expr* rhs);
 
     bool equals(Expr* e) override;
-    int interp() override;
+    Val* interp() override;
     bool has_variable() override;
     Expr* subst(std::string s, Expr* e) override;
     void printExpr(std::ostream& out) override;
@@ -97,7 +98,7 @@ class ExprMult : public Expr {
     ExprMult(Expr* lhs, Expr* rhs);
 
     bool equals(Expr* e) override;
-    int interp() override;
+    Val* interp() override;
     bool has_variable() override;
     Expr* subst(std::string s, Expr* e) override;
     void printExpr(std::ostream& out) override;
@@ -114,7 +115,7 @@ class ExprVar : public Expr {
     ExprVar(std::string var);
 
     bool equals(Expr* e) override;
-    int interp() override;
+    Val* interp() override;
     bool has_variable() override;
     Expr* subst(std::string s, Expr* e) override;
     void printExpr(std::ostream& out) override;
@@ -130,7 +131,7 @@ public:
     ExprLet(std::string name, Expr* rhs, Expr* body);
 
     bool equals(Expr* e) override;
-    int interp() override;
+    Val* interp() override;
     bool has_variable() override;
     Expr* subst(std::string s, Expr* e) override;
     void printExpr(std::ostream& out) override;

@@ -3,6 +3,7 @@
 
 #include "catch.h"      // must match your actual filename
 #include "expr.hpp"     // your project header
+#include "val.h"
 
 TEST_CASE("Check if values are equals") {
     CHECK( (new ExprNum(3))->equals(new ExprNum(3)) == true);
@@ -39,24 +40,23 @@ TEST_CASE("Wrong type in Add and Mult") {
 
 
 TEST_CASE("Tets interp 'Total sum of an expression' if return sum value") {
-    CHECK( (new ExprNum(3))->interp() == 3);
-    CHECK( (new ExprAdd(new ExprNum(3), new ExprNum(3)))->interp() == 6);
-    CHECK( (new ExprMult(new ExprNum(10), new ExprNum(10)))->interp() == 100);
-    CHECK_THROWS_WITH( (new ExprVar("X"))->interp(), "This expression cannot be evaluated because it contain a variable");
+    CHECK( (new ExprNum(3))->interp()->equals(new NumVal(3)));
+    CHECK( (new ExprAdd(new ExprNum(3), new ExprNum(3)))->interp()->equals(new NumVal(6)));
+    CHECK( (new ExprMult(new ExprNum(10), new ExprNum(10)))->interp()->equals(new NumVal(100)));
+    CHECK_THROWS_WITH((new ExprVar("X"))->interp(), "free variable: X");
 }
 
 TEST_CASE("Nested expressions") {
    CHECK(
     (new ExprAdd(new ExprAdd(new ExprNum(10), new ExprNum(15)),
    new ExprAdd(new ExprNum(20), new ExprNum(20))
-))->interp() == 65
-);
+))->interp()->equals(new NumVal(65)));
 
 CHECK(
   (new ExprMult(
       new ExprAdd(new ExprNum(2), new ExprNum(3)),
       new ExprNum(4)
-  ))->interp() == 20
+  ))->interp()->equals(new NumVal(20))
 );
 }
 

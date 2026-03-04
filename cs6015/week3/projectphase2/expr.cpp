@@ -2,6 +2,7 @@
 #include <string>
 #include <stdexcept>
 #include <ios>
+#include "val.h"
 
 // provides string stream classes that allow 
 // developers to perform input and output 
@@ -45,8 +46,8 @@ bool ExprNum::equals(Expr* e) {
 }
 
 // interp for Num
-int ExprNum::interp() {
-    return value;
+Val* ExprNum::interp() {
+    return new NumVal(value);
 }
 
 // Num has variable
@@ -83,8 +84,8 @@ bool ExprAdd::equals(Expr* e){
 }
 
 // interp for Add
-int ExprAdd::interp() {
-    return lhs->interp() + rhs->interp();
+Val* ExprAdd::interp() {
+    return lhs->interp()->add_to( rhs->interp());
 }
 
 // has_variable for Add
@@ -146,8 +147,8 @@ bool ExprMult::equals(Expr* e){
 }
 
 // Mult interp
-int ExprMult::interp() {
-    return lhs->interp() * rhs->interp();
+Val* ExprMult::interp() {
+    return lhs->interp()->mult_with( rhs->interp());
 }
 
 // Mult has_variable
@@ -211,8 +212,8 @@ bool ExprVar::equals(Expr* e){
 }
 
 // interp for var
-int ExprVar::interp() {
-    throw std::runtime_error("This expression cannot be evaluated because it contain a variable");
+Val* ExprVar::interp() {
+    throw std::runtime_error("free variable: " + var);
 }
 
 // Var has_variable
@@ -256,9 +257,9 @@ bool ExprLet::equals(Expr* e) {
 }
 
 // interp is evaluating rhs, substitute into body, then interpret body
-int ExprLet::interp() {
-    int v = rhs->interp();
-    Expr* new_body = body->subst(name, new ExprNum(v));
+Val* ExprLet::interp() {
+    Val* v = rhs->interp();
+    Expr* new_body = body->subst(name, v->to_expr());
     return new_body->interp();
 }
 
