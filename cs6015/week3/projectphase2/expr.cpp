@@ -1,113 +1,107 @@
 #include "expr.hpp"
-#include <string>
-#include <stdexcept>
-#include <ios>
 #include "val.h"
+#include <stdexcept>
 
-// provides string stream classes that allow 
-// developers to perform input and output 
-// operations on strings in memory, treating 
-// a string object like a stream.
-#include <sstream>
+// =========================
+// ExprNum
+// =========================
 
-
-/**
- * Helper function that figure out how far we are from the start of Current Line
- * count from last \n
- */
-
- static int current_column(std::ostream& out) {
-    // since to_pretty_string use stringstream 
-    auto* ss = dynamic_cast<std::stringstream*>(&out);
-    if (ss == nullptr) return 0; // we want to make sure ss is a pointer
-
-    std::string s = ss->str(); // everything inside stream
-    size_t last_newline = s.rfind("\n"); // find last \na
-
-    if (last_newline == std::string::npos) return (int)s.size(); // first line
-
-    return (int)(s.size() - last_newline -1); // char after '\n'
-
- }
-
-
-// initialize value in constructor
-// Num
 ExprNum::ExprNum(int value) {
     this->value = value;
 }
 
-// equal function for Num
 bool ExprNum::equals(Expr* e) {
-    // dynamic_cast convert Expr* to ExprNum*
-    ExprNum* other = dynamic_cast<ExprNum*>(e);
-    if (other == nullptr) return false;
-    return value == other->value;
+    ExprNum* num = dynamic_cast<ExprNum*>(e);
+    return num != nullptr && this->value == num->value;
 }
 
-// interp for Num
 Val* ExprNum::interp() {
     return new NumVal(value);
 }
 
-// Num has variable
 bool ExprNum::has_variable() {
     return false;
 }
 
-// Num printExpr
-void ExprNum::printExpr(std::ostream& out) {
-    // since parameter is ostream we can use <<
-    out << value;
-}
-
-
-// for subst just return new value
-Expr* ExprNum::subst(std::string, Expr*) {
+Expr* ExprNum::subst(std::string s, Expr* e) {
+    (void)s;
+    (void)e;
     return new ExprNum(value);
 }
 
-// Add constructor
+void ExprNum::printExpr(std::ostream& out) {
+    out << value;
+}
+
+void ExprNum::pretty_print_at(std::ostream& out, precedence_t) {
+    out << value;
+}
+
+// =========================
+// ExprVar
+// =========================
+
+ExprVar::ExprVar(std::string var) {
+    this->var = var;
+}
+
+bool ExprVar::equals(Expr* e) {
+    ExprVar* v = dynamic_cast<ExprVar*>(e);
+    return v != nullptr && this->var == v->var;
+}
+
+Val* ExprVar::interp() {
+    throw std::runtime_error("free variable: " + var);
+}
+
+bool ExprVar::has_variable() {
+    return true;
+}
+
+Expr* ExprVar::subst(std::string s, Expr* e) {
+    if (var == s)
+        return e;
+    return new ExprVar(var);
+}
+
+void ExprVar::printExpr(std::ostream& out) {
+    out << var;
+}
+
+void ExprVar::pretty_print_at(std::ostream& out, precedence_t) {
+    out << var;
+}
+
+// =========================
+// ExprAdd
+// =========================
+
 ExprAdd::ExprAdd(Expr* lhs, Expr* rhs) {
     this->lhs = lhs;
     this->rhs = rhs;
 }
 
-// equal function for Add
-bool ExprAdd::equals(Expr* e){
-    ExprAdd* other = dynamic_cast<ExprAdd*>(e);
-
-    if (other == nullptr) return false;
-    
-    // we use recursion to compare values
-    return lhs->equals(other->lhs) && rhs->equals(other->rhs);
+bool ExprAdd::equals(Expr* e) {
+    ExprAdd* add = dynamic_cast<ExprAdd*>(e);
+    return add != nullptr &&
+           lhs->equals(add->lhs) &&
+           rhs->equals(add->rhs);
 }
 
-// interp for Add
 Val* ExprAdd::interp() {
-    return lhs->interp()->add_to( rhs->interp());
+    return lhs->interp()->add_to(rhs->interp());
 }
 
-// has_variable for Add
 bool ExprAdd::has_variable() {
-    if (lhs->has_variable() || rhs->has_variable()) {
-        return true;
-    } else {
-        return false;
-    }
+    return lhs->has_variable() || rhs->has_variable();
 }
 
-//subs for Add
 Expr* ExprAdd::subst(std::string s, Expr* e) {
-    Expr* lhs_sub = lhs->subst(s, e);
-    Expr* rhs_sub = rhs->subst(s,e);
-    return new ExprAdd(lhs_sub, rhs_sub);
+    return new ExprAdd(lhs->subst(s, e), rhs->subst(s, e));
 }
 
-// printExpr for add
 void ExprAdd::printExpr(std::ostream& out) {
     out << "(";
-    // pinter to printExpr
     lhs->printExpr(out);
     out << "+";
     rhs->printExpr(out);
@@ -119,55 +113,47 @@ void ExprAdd::pretty_print(std::ostream& out) {
 }
 
 void ExprAdd::pretty_print_at(std::ostream& out, precedence_t prec) {
-    bool need_parent = (prec == prec_mult) || (prec == prec_add);
-    if (need_parent) out << "(";
+    bool need_parens = (prec == prec_add || prec == prec_mult);
 
-    // left side this tells it's in the left side of add
+    if (need_parens)
+        out << "(";
+
     lhs->pretty_print_at(out, prec_add);
-
     out << " + ";
-
-    // right side allow 
     rhs->pretty_print_at(out, prec_none);
 
-    if (need_parent) out << ")";
+    if (need_parens)
+        out << ")";
 }
 
-// Mult constructor
+// =========================
+// ExprMult
+// =========================
+
 ExprMult::ExprMult(Expr* lhs, Expr* rhs) {
     this->lhs = lhs;
     this->rhs = rhs;
 }
 
-// Mult equals
-bool ExprMult::equals(Expr* e){
-    ExprMult* other = dynamic_cast<ExprMult*>(e);
-    if (other == nullptr) return false;
-    return lhs->equals(other->lhs) && rhs->equals(other->rhs);
+bool ExprMult::equals(Expr* e) {
+    ExprMult* mult = dynamic_cast<ExprMult*>(e);
+    return mult != nullptr &&
+           lhs->equals(mult->lhs) &&
+           rhs->equals(mult->rhs);
 }
 
-// Mult interp
 Val* ExprMult::interp() {
-    return lhs->interp()->mult_with( rhs->interp());
+    return lhs->interp()->mult_with(rhs->interp());
 }
 
-// Mult has_variable
 bool ExprMult::has_variable() {
-    if (lhs->has_variable() || rhs->has_variable() ) {
-        return true;
-    } else {
-        return false;
-    }
+    return lhs->has_variable() || rhs->has_variable();
 }
 
-// Mult subst
 Expr* ExprMult::subst(std::string s, Expr* e) {
-    Expr* lhs_sub = lhs->subst(s,e);
-    Expr* rhs_sub = rhs->subst(s,e);
-    return new ExprMult(lhs_sub, rhs_sub);
+    return new ExprMult(lhs->subst(s, e), rhs->subst(s, e));
 }
 
-// Print expression Mult
 void ExprMult::printExpr(std::ostream& out) {
     out << "(";
     lhs->printExpr(out);
@@ -181,67 +167,27 @@ void ExprMult::pretty_print(std::ostream& out) {
 }
 
 void ExprMult::pretty_print_at(std::ostream& out, precedence_t prec) {
-    bool need_parens = (prec == prec_mult); // left child of another mult
+    bool need_parens = (prec == prec_mult);
 
-    if (need_parens) out << "(";
+    if (need_parens)
+        out << "(";
 
-    // left: force left association parentheses for (a*b)*c
     lhs->pretty_print_at(out, prec_mult);
-
     out << " * ";
 
-    if (dynamic_cast<ExprAdd*>(rhs) != nullptr) {
+    if (dynamic_cast<ExprAdd*>(rhs) != nullptr || dynamic_cast<EqExpr*>(rhs) != nullptr)
         rhs->pretty_print_at(out, prec_mult);
-    } else {
+    else
         rhs->pretty_print_at(out, prec_none);
-    }
 
-    if (need_parens) out << ")";
+    if (need_parens)
+        out << ")";
 }
 
-// Val
-ExprVar::ExprVar(std::string var){
-    this->var = var;
-}
+// =========================
+// ExprLet
+// =========================
 
-// equals for Var
-bool ExprVar::equals(Expr* e){
-    ExprVar* other = dynamic_cast<ExprVar*>(e);
-    if (other == nullptr) return false;
-    return var == other->var;
-}
-
-// interp for var
-Val* ExprVar::interp() {
-    throw std::runtime_error("free variable: " + var);
-}
-
-// Var has_variable
-bool ExprVar::has_variable() {
-    return true;
-}
-
-// just return new variable type
-Expr* ExprVar::subst(std::string s, Expr* e) {
-    // we want to return the expr not the string
-    if (var == s) {
-        return e;
-    } else {
-        return new ExprVar(var);
-    }
-}
-
-// print expr Val 
-void ExprVar::printExpr(std::ostream& out) {
-    out << var;
-}
-
-
-//----------
-// Let
-// ----------
-
-// constructor
 ExprLet::ExprLet(std::string name, Expr* rhs, Expr* body) {
     this->name = name;
     this->rhs = rhs;
@@ -249,75 +195,226 @@ ExprLet::ExprLet(std::string name, Expr* rhs, Expr* body) {
 }
 
 bool ExprLet::equals(Expr* e) {
-    ExprLet* other = dynamic_cast<ExprLet*>(e);
-    if (other == nullptr) return false;
-    return name == other->name // name is not an Expr use regular comparison
-        && rhs->equals(other->rhs)
-        && body->equals(other->body);
+    ExprLet* let = dynamic_cast<ExprLet*>(e);
+    return let != nullptr &&
+           name == let->name &&
+           rhs->equals(let->rhs) &&
+           body->equals(let->body);
 }
 
-// interp is evaluating rhs, substitute into body, then interpret body
 Val* ExprLet::interp() {
-    Val* v = rhs->interp();
-    Expr* new_body = body->subst(name, v->to_expr());
+    Val* rhs_val = rhs->interp();
+    Expr* new_body = body->subst(name, rhs_val->to_expr());
     return new_body->interp();
 }
 
-// has_variable: only rhs/body matter (name itself doesn't count)
 bool ExprLet::has_variable() {
     return rhs->has_variable() || body->has_variable();
 }
 
-// subst: always substitute in rhs.
-// In body: if let binds the same name, don't substitute into body (shadowing)
 Expr* ExprLet::subst(std::string s, Expr* e) {
     Expr* new_rhs = rhs->subst(s, e);
 
     if (name == s) {
-        // shadowing: do not substitute into body
         return new ExprLet(name, new_rhs, body);
-    } else {
-        Expr* new_body = body->subst(s, e);
-        return new ExprLet(name, new_rhs, new_body);
+    }
+    else {
+        return new ExprLet(name, new_rhs, body->subst(s, e));
     }
 }
 
-// printExpr: always parenthesized, no spaces around '='
-// single spaces after _let and before/after _in
 void ExprLet::printExpr(std::ostream& out) {
-    out << "(_let " << name << "=";
+    out << "(_let ";
+    out << name;
+    out << "=";
     rhs->printExpr(out);
     out << " _in ";
     body->printExpr(out);
     out << ")";
 }
 
-// pretty_print: for now, call helper with prec_none
 void ExprLet::pretty_print(std::ostream& out) {
     pretty_print_at(out, prec_none);
 }
 
-
 void ExprLet::pretty_print_at(std::ostream& out, precedence_t prec) {
-    // add parentheses if needed
-    bool need_parens = (prec == prec_add) || (prec == prec_mult);
+    bool need_parens = (prec != prec_none);
 
-    if (need_parens) out << "(";
+    if (need_parens)
+        out << "(";
 
-    // find where _let start on this line
-    int let_column = current_column(out);
-
-    // print first line
     out << "_let " << name << " = ";
     rhs->pretty_print_at(out, prec_none);
-
-    out << "\n";
-
-    // indent "_in" to line up under _let
-    out << std::string(let_column, ' ');
-    out << "_in  ";
-
+    out << "\n_in  ";
     body->pretty_print_at(out, prec_none);
 
-    if (need_parens) out << ")";
+    if (need_parens)
+        out << ")";
+}
+
+// =========================
+// BoolExpr
+// =========================
+
+BoolExpr::BoolExpr(bool value) {
+    this->value = value;
+}
+
+bool BoolExpr::equals(Expr* e) {
+    BoolExpr* b = dynamic_cast<BoolExpr*>(e);
+    return b != nullptr && this->value == b->value;
+}
+
+Val* BoolExpr::interp() {
+    return new BoolVal(value);
+}
+
+bool BoolExpr::has_variable() {
+    return false;
+}
+
+Expr* BoolExpr::subst(std::string s, Expr* e) {
+    (void)s;
+    (void)e;
+    return new BoolExpr(value);
+}
+
+void BoolExpr::printExpr(std::ostream& out) {
+    out << (value ? "_true" : "_false");
+}
+
+void BoolExpr::pretty_print(std::ostream& out) {
+    printExpr(out);
+}
+
+void BoolExpr::pretty_print_at(std::ostream& out, precedence_t) {
+    printExpr(out);
+}
+
+// =========================
+// EqExpr
+// =========================
+
+EqExpr::EqExpr(Expr* lhs, Expr* rhs) {
+    this->lhs = lhs;
+    this->rhs = rhs;
+}
+
+bool EqExpr::equals(Expr* e) {
+    EqExpr* eq = dynamic_cast<EqExpr*>(e);
+    return eq != nullptr &&
+           lhs->equals(eq->lhs) &&
+           rhs->equals(eq->rhs);
+}
+
+Val* EqExpr::interp() {
+    Val* left_val = lhs->interp();
+    Val* right_val = rhs->interp();
+    return new BoolVal(left_val->equals(right_val));
+}
+
+bool EqExpr::has_variable() {
+    return lhs->has_variable() || rhs->has_variable();
+}
+
+Expr* EqExpr::subst(std::string s, Expr* e) {
+    return new EqExpr(lhs->subst(s, e), rhs->subst(s, e));
+}
+
+void EqExpr::printExpr(std::ostream& out) {
+    out << "(";
+    lhs->printExpr(out);
+    out << "==";
+    rhs->printExpr(out);
+    out << ")";
+}
+
+void EqExpr::pretty_print(std::ostream& out) {
+    pretty_print_at(out, prec_none);
+}
+
+void EqExpr::pretty_print_at(std::ostream& out, precedence_t prec) {
+    bool need_parens = (prec != prec_none);
+
+    if (need_parens)
+        out << "(";
+
+    lhs->pretty_print_at(out, prec_eq);
+    out << " == ";
+    rhs->pretty_print_at(out, prec_none);
+
+    if (need_parens)
+        out << ")";
+}
+
+// =========================
+// IfExpr
+// =========================
+
+IfExpr::IfExpr(Expr* test_part, Expr* then_part, Expr* else_part) {
+    this->test_part = test_part;
+    this->then_part = then_part;
+    this->else_part = else_part;
+}
+
+bool IfExpr::equals(Expr* e) {
+    IfExpr* iff = dynamic_cast<IfExpr*>(e);
+    return iff != nullptr &&
+           test_part->equals(iff->test_part) &&
+           then_part->equals(iff->then_part) &&
+           else_part->equals(iff->else_part);
+}
+
+Val* IfExpr::interp() {
+    Val* test_val = test_part->interp();
+
+    if (test_val->is_true())
+        return then_part->interp();
+    else
+        return else_part->interp();
+}
+
+bool IfExpr::has_variable() {
+    return test_part->has_variable() ||
+           then_part->has_variable() ||
+           else_part->has_variable();
+}
+
+Expr* IfExpr::subst(std::string s, Expr* e) {
+    return new IfExpr(
+        test_part->subst(s, e),
+        then_part->subst(s, e),
+        else_part->subst(s, e)
+    );
+}
+
+void IfExpr::printExpr(std::ostream& out) {
+    out << "(_if ";
+    test_part->printExpr(out);
+    out << " _then ";
+    then_part->printExpr(out);
+    out << " _else ";
+    else_part->printExpr(out);
+    out << ")";
+}
+
+void IfExpr::pretty_print(std::ostream& out) {
+    pretty_print_at(out, prec_none);
+}
+
+void IfExpr::pretty_print_at(std::ostream& out, precedence_t prec) {
+    bool need_parens = (prec != prec_none);
+
+    if (need_parens)
+        out << "(";
+
+    out << "_if ";
+    test_part->pretty_print_at(out, prec_none);
+    out << "\n_then ";
+    then_part->pretty_print_at(out, prec_none);
+    out << "\n_else ";
+    else_part->pretty_print_at(out, prec_none);
+
+    if (need_parens)
+        out << ")";
 }

@@ -20,6 +20,8 @@ class Val {
 
     // convert value back to expr
     virtual Expr* to_expr() = 0;
+
+    virtual bool is_true() = 0;
 };
 
 class NumVal : public Val {
@@ -33,4 +35,16 @@ class NumVal : public Val {
     virtual Val* mult_with(Val* other) override;
     virtual std::string to_string() override;
     virtual Expr* to_expr() override;
+};
+
+class BoolVal : public Val {
+    public:
+    explicit BoolVal(bool val);
+
+    bool equals(Val* other) override;
+    Val* add_to(Val* other) override;
+    Val* mult_with(Val* other) override;
+    std::string to_string() override;
+    Expr* to_expr() override;
+    bool is_true() override;
 };
