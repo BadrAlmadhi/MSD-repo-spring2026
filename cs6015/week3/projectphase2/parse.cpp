@@ -4,6 +4,7 @@
 #include <stdexcept> // run time error
 #include "parse.hpp"
 #include "expr.hpp"
+#include <climits>
 
 // helper functions 
 
@@ -42,19 +43,25 @@ static std::string parse_identifier(std::istream &in) {
 
 // parse non negative integer
 static int parse_number(std::istream &in) {
-    int n = 0;
+    unsigned int n = 0;
     bool seen_digit = false;
 
     while (std::isdigit(in.peek())) {
         seen_digit = true;
-        // convert characters into int
-        n = n * 10 + (in.get() - '0');
+        unsigned int digit = (unsigned int)(in.get() - '0');
+
+        if (n > (((unsigned int)INT_MAX) - digit) / 10u) {
+            throw std::runtime_error("number constant is too big");
+        }
+
+        n = n * 10u + digit;
     }
 
     if (!seen_digit) {
         throw std::runtime_error("expected number");
     }
-    return n;
+
+    return (int)n;
 }
 
 // forward declaration

@@ -1,5 +1,9 @@
 CXX = clang++
-CXXFLAGS = -std=c++17 -Wall -Wextra
+# CXXFLAGS = -std=c++17 -Wall -Wextra
+
+# detect undefined behavior
+# stop if UB happens
+CXXFLAGS = -std=c++17 -Wall -Wextra -fsanitize=undefined -fno-sanitize-recover=undefined
 
 #OBJS = main.o cmdline.o expr.o parse.o val.o test.o
 # Main program (includes tests)

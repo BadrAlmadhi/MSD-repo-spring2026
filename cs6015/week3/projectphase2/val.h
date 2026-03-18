@@ -35,10 +35,13 @@ class NumVal : public Val {
     virtual Val* mult_with(Val* other) override;
     virtual std::string to_string() override;
     virtual Expr* to_expr() override;
+    virtual bool is_true() override;
 };
 
 class BoolVal : public Val {
-    public:
+public:
+    bool val;
+
     explicit BoolVal(bool val);
 
     bool equals(Val* other) override;

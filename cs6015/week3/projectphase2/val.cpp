@@ -1,6 +1,7 @@
 #include "val.h"
 #include "expr.hpp"
 #include <stdexcept>
+#include <climits>
 
 NumVal::NumVal(int val) : val(val) {}
 
@@ -13,14 +14,24 @@ Val* NumVal::add_to(Val* other) {
     NumVal* o = dynamic_cast<NumVal*>(other);
     if (o == nullptr)
         throw std::runtime_error("Adding non-numbers");
-    return new NumVal(val + o->val);
+
+    long long result = (long long)val+(long long) o->val;
+    if (result > INT_MAX || result < INT_MIN)
+        throw std::runtime_error("integer overflow in addition");
+    return new NumVal((int)result);
 }
 
 Val* NumVal::mult_with(Val* other) {
     NumVal* o = dynamic_cast<NumVal*>(other);
     if (o == nullptr)
         throw std::runtime_error("Multiplying non-numbers");
-    return new NumVal(val * o->val);
+
+    long long result = (long long)val * (long long)o->val;
+
+    if (result > INT_MAX || result < INT_MIN)
+        throw std::runtime_error("integer overflow in multiplication");
+
+    return new NumVal((int)result);
 }
 
 std::string NumVal::to_string() {
