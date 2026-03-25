@@ -3,6 +3,7 @@
 #include "catch.h"      // must match your actual filename
 #include "expr.hpp"     // your project header
 #include "val.h"
+#include "parse.hpp"
 
 TEST_CASE("Check if values are equals") {
     CHECK( (new ExprNum(3))->equals(new ExprNum(3)) == true);
@@ -96,10 +97,6 @@ TEST_CASE("Let printExpr to_string") {
     );
 }
 
-TEST_CASE("Let has_variable") {
-    CHECK((new ExprLet("x", new ExprNum(5), new ExprNum(1)))->has_variable() == false);
-    CHECK((new ExprLet("x", new ExprNum(5), new ExprVar("x")))->has_variable() == true);
-}
 
 TEST_CASE("Let pretty_print") {
     CHECK(
@@ -110,4 +107,20 @@ TEST_CASE("Let pretty_print") {
             new ExprVar("x")
           )))->to_pretty_string() == "_let x = 5\n_in  (_let y = 3\n      _in  y + 2) + x"
     );
+}
+
+TEST_CASE("Function interp") {
+    CHECK(parse_str("_let f = _fun (x) x + 1 _in f(5)")->interp()->equals(new NumVal(6)));
+    CHECK(parse_str("_let f = _fun (x) x * 2 _in f(4)")->interp()->equals(new NumVal(8)));
+}
+
+TEST_CASE("Function print") {
+    CHECK(parse_str("_fun (x) x + 1")->to_string() == "(_fun (x) (x+1))");
+    CHECK(parse_str("_let f = _fun (x) x + 1 _in f(5)")->to_string()
+          == "(_let f=(_fun (x) (x+1)) _in f(5))");
+}
+
+TEST_CASE("Function pretty print") {
+    CHECK(parse_str("_fun (x) _if x == 1 _then 1 _else x + 2")->to_pretty_string()
+          == "_fun (x)\n  _if x == 1\n  _then 1\n  _else x + 2");
 }

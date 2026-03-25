@@ -70,6 +70,7 @@ static Expr* parse_comparg(std::istream &in);
 static Expr* parse_addend(std::istream &in);
 static Expr* parse_multicand(std::istream &in);
 static Expr* parse_inner(std::istream &in);
+static Expr* parse_call(std::istream &in);
 
 // parse the smallest pieces : numbers, variable, parentheses, and _let
 
@@ -81,6 +82,17 @@ static Expr* parse_inner(std::istream &in) {
     int c = in.peek();
     if (c == EOF)
         throw std::runtime_error("unexpected end of input");
+
+    // negative number
+    if (c == '-') {
+        consume(in, '-');
+
+        if (!std::isdigit(in.peek()))
+            throw std::runtime_error("bad expression");
+
+        int n = parse_number(in);
+        return new ExprNum(-n);
+    }
 
     // number
     if (std::isdigit(c)) {
@@ -108,6 +120,7 @@ static Expr* parse_inner(std::istream &in) {
     // _true
     // _false
     // _if expr _then expr _else expr
+    // _fun (x) expr
     if (c == '_') {
         consume(in, '_');
         std::string kw = parse_identifier(in);
@@ -169,6 +182,18 @@ static Expr* parse_inner(std::istream &in) {
             return new IfExpr(test_part, then_part, else_part);
         }
 
+        // _fun (x) expr
+        if (kw == "fun") {
+            skip_ws(in);
+            consume(in, '(');
+            std::string arg = parse_identifier(in);
+            skip_ws(in);
+            consume(in, ')');
+
+            Expr* body = parse_expr(in);
+            return new FunExpr(arg, body);
+        }
+
         throw std::runtime_error("unknown keyword");
     }
 
@@ -178,14 +203,14 @@ static Expr* parse_inner(std::istream &in) {
 // Parse multiplication level: inner ( * inner )*
 static Expr* parse_multicand(std::istream &in) {
     // First, parse the left-most inner expression
-    Expr* e = parse_inner(in);
+    Expr* e = parse_call(in);
     skip_ws(in);
 
     // If we see '*', keep building a left-associative chain:
     // a*b*c becomes Mult(Mult(a,b),c)
     while (in.peek() == '*') {
         consume(in, '*');
-        Expr* rhs = parse_inner(in);
+        Expr* rhs = parse_call(in);
         e = new ExprMult(e, rhs);
         skip_ws(in);
     }
@@ -223,6 +248,24 @@ static Expr* parse_comparg(std::istream &in) {
 
         Expr* rhs = parse_addend(in);
         e = new EqExpr(e, rhs);
+        skip_ws(in);
+    }
+
+    return e;
+}
+
+// Parse function call level: inner ( (expr) )*
+static Expr* parse_call(std::istream &in) {
+    Expr* e = parse_inner(in);
+    skip_ws(in);
+
+    while (in.peek() == '(') {
+        consume(in, '(');
+        Expr* arg = parse_expr(in);
+        skip_ws(in);
+        consume(in, ')');
+
+        e = new CallExpr(e, arg);
         skip_ws(in);
     }
 

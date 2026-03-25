@@ -46,9 +46,7 @@ Val* ExprNum::interp() {
     return new NumVal(value);
 }
 
-bool ExprNum::has_variable() {
-    return false;
-}
+
 
 Expr* ExprNum::subst(std::string s, Expr* e) {
     (void)s;
@@ -81,9 +79,7 @@ Val* ExprVar::interp() {
     throw std::runtime_error("free variable: " + var);
 }
 
-bool ExprVar::has_variable() {
-    return true;
-}
+
 
 Expr* ExprVar::subst(std::string s, Expr* e) {
     if (var == s)
@@ -119,9 +115,7 @@ Val* ExprAdd::interp() {
     return lhs->interp()->add_to(rhs->interp());
 }
 
-bool ExprAdd::has_variable() {
-    return lhs->has_variable() || rhs->has_variable();
-}
+
 
 Expr* ExprAdd::subst(std::string s, Expr* e) {
     return new ExprAdd(lhs->subst(s, e), rhs->subst(s, e));
@@ -177,9 +171,7 @@ Val* ExprMult::interp() {
     return lhs->interp()->mult_with(rhs->interp());
 }
 
-bool ExprMult::has_variable() {
-    return lhs->has_variable() || rhs->has_variable();
-}
+
 
 Expr* ExprMult::subst(std::string s, Expr* e) {
     return new ExprMult(lhs->subst(s, e), rhs->subst(s, e));
@@ -241,9 +233,7 @@ Val* ExprLet::interp() {
     return new_body->interp();
 }
 
-bool ExprLet::has_variable() {
-    return rhs->has_variable() || body->has_variable();
-}
+
 
 Expr* ExprLet::subst(std::string s, Expr* e) {
     Expr* new_rhs = rhs->subst(s, e);
@@ -304,9 +294,7 @@ Val* BoolExpr::interp() {
     return new BoolVal(value);
 }
 
-bool BoolExpr::has_variable() {
-    return false;
-}
+
 
 Expr* BoolExpr::subst(std::string s, Expr* e) {
     (void)s;
@@ -348,9 +336,6 @@ Val* EqExpr::interp() {
     return new BoolVal(left_val->equals(right_val));
 }
 
-bool EqExpr::has_variable() {
-    return lhs->has_variable() || rhs->has_variable();
-}
 
 Expr* EqExpr::subst(std::string s, Expr* e) {
     return new EqExpr(lhs->subst(s, e), rhs->subst(s, e));
@@ -413,11 +398,7 @@ Val* IfExpr::interp() {
         return else_part->interp();
 }
 
-bool IfExpr::has_variable() {
-    return test_part->has_variable() ||
-           then_part->has_variable() ||
-           else_part->has_variable();
-}
+
 
 Expr* IfExpr::subst(std::string s, Expr* e) {
     return new IfExpr(
@@ -455,4 +436,106 @@ void IfExpr::pretty_print_at(std::ostream& out, precedence_t prec) {
 
     if (need_parens)
         out << ")";
+}
+
+//================
+// FunExpr
+//================
+
+FunExpr::FunExpr(std::string formal_arg, Expr* body) {
+    this->formal_arg = formal_arg;
+    this->body = body;
+}
+
+bool FunExpr::equals(Expr* e) {
+    FunExpr* f = dynamic_cast<FunExpr*>(e);
+    return f != nullptr &&
+           formal_arg == f->formal_arg &&
+           body->equals(f->body);
+}
+
+Val* FunExpr::interp() {
+    return new FunVal(formal_arg, body);
+}
+
+Expr* FunExpr::subst(std::string s, Expr* e) {
+    if (formal_arg == s)
+        return new FunExpr(formal_arg, body);
+    return new FunExpr(formal_arg, body->subst(s, e));
+}
+
+void FunExpr::printExpr(std::ostream& out) {
+    out << "(_fun (" << formal_arg << ") ";
+    body->printExpr(out);
+    out << ")";
+}
+
+void FunExpr::pretty_print(std::ostream& out) {
+    pretty_print_at(out, prec_none);
+}
+
+void FunExpr::pretty_print_at(std::ostream& out, precedence_t prec) {
+    bool need_parens = (prec != prec_none);
+
+    if (need_parens)
+        out << "(";
+
+    out << "_fun (" << formal_arg << ")\n";
+    print_multiline(out, "  ", body, prec_none);
+
+    if (need_parens)
+        out << ")";
+}
+
+// =====================
+// CallExpr
+// =====================
+CallExpr::CallExpr(Expr* to_be_called, Expr* actual_arg) {
+    this->to_be_called = to_be_called;
+    this->actual_arg = actual_arg;
+}
+
+bool CallExpr::equals(Expr* e) {
+    CallExpr* c = dynamic_cast<CallExpr*>(e);
+    return c != nullptr &&
+           to_be_called->equals(c->to_be_called) &&
+           actual_arg->equals(c->actual_arg);
+}
+
+Val* CallExpr::interp() {
+    Val* fun_val = to_be_called->interp();
+
+    FunVal* f = dynamic_cast<FunVal*>(fun_val);
+    if (f == nullptr)
+        throw std::runtime_error("not a function");
+
+    Val* arg_val = actual_arg->interp();
+
+    Expr* new_body = f->body->subst(f->formal_arg, arg_val->to_expr());
+    return new_body->interp();
+}
+
+Expr* CallExpr::subst(std::string s, Expr* e) {
+    return new CallExpr(
+        to_be_called->subst(s, e),
+        actual_arg->subst(s, e)
+    );
+}
+
+void CallExpr::printExpr(std::ostream& out) {
+    to_be_called->printExpr(out);
+    out << "(";
+    actual_arg->printExpr(out);
+    out << ")";
+}
+
+void CallExpr::pretty_print(std::ostream& out) {
+    pretty_print_at(out, prec_none);
+}
+
+void CallExpr::pretty_print_at(std::ostream& out, precedence_t) {
+    to_be_called->pretty_print(out);
+    out << "(";
+    actual_arg->pretty_print(out);
+    out << ")";
 }

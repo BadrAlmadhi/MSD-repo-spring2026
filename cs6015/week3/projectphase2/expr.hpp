@@ -21,7 +21,6 @@ public:
 
     virtual bool equals(Expr *e) = 0;
     virtual Val* interp() = 0;
-    virtual bool has_variable() = 0;
     virtual Expr* subst(std::string, Expr* e) = 0;
 
     virtual void printExpr(std::ostream& out) = 0;
@@ -56,7 +55,6 @@ public:
 
     bool equals(Expr* e) override;
     Val* interp() override;
-    bool has_variable() override;
     Expr* subst(std::string s, Expr* e) override;
     void printExpr(std::ostream& out) override;
     void pretty_print_at(std::ostream& out, precedence_t) override;
@@ -72,7 +70,6 @@ public:
 
     bool equals(Expr* e) override;
     Val* interp() override;
-    bool has_variable() override;
     Expr* subst(std::string s, Expr* e) override;
     void printExpr(std::ostream& out) override;
     void pretty_print(std::ostream& out) override;
@@ -89,7 +86,6 @@ public:
 
     bool equals(Expr* e) override;
     Val* interp() override;
-    bool has_variable() override;
     Expr* subst(std::string s, Expr* e) override;
     void printExpr(std::ostream& out) override;
     void pretty_print(std::ostream& out) override;
@@ -105,7 +101,6 @@ public:
 
     bool equals(Expr* e) override;
     Val* interp() override;
-    bool has_variable() override;
     Expr* subst(std::string s, Expr* e) override;
     void printExpr(std::ostream& out) override;
     void pretty_print_at(std::ostream& out, precedence_t) override;
@@ -122,7 +117,6 @@ public:
 
     bool equals(Expr* e) override;
     Val* interp() override;
-    bool has_variable() override;
     Expr* subst(std::string s, Expr* e) override;
     void printExpr(std::ostream& out) override;
     void pretty_print(std::ostream& out) override;
@@ -138,7 +132,6 @@ public:
 
     bool equals(Expr* e) override;
     Val* interp() override;
-    bool has_variable() override;
     Expr* subst(std::string s, Expr* e) override;
     void printExpr(std::ostream& out) override;
     void pretty_print(std::ostream& out) override;
@@ -155,7 +148,6 @@ public:
 
     bool equals(Expr* e) override;
     Val* interp() override;
-    bool has_variable() override;
     Expr* subst(std::string s, Expr* e) override;
     void printExpr(std::ostream& out) override;
     void pretty_print(std::ostream& out) override;
@@ -173,7 +165,39 @@ public:
 
     bool equals(Expr* e) override;
     Val* interp() override;
-    bool has_variable() override;
+    Expr* subst(std::string s, Expr* e) override;
+    void printExpr(std::ostream& out) override;
+    void pretty_print(std::ostream& out) override;
+    void pretty_print_at(std::ostream& out, precedence_t prec) override;
+};
+
+
+// Function Expression
+class FunExpr : public Expr {
+public:
+    std::string formal_arg;
+    Expr* body;
+
+    FunExpr(std::string formal_arg, Expr* body);
+
+    bool equals(Expr* e) override;
+    Val* interp() override;
+    Expr* subst(std::string s, Expr* e) override;
+    void printExpr(std::ostream& out) override;
+    void pretty_print(std::ostream& out) override;
+    void pretty_print_at(std::ostream& out, precedence_t prec) override;
+};
+
+// Function Call Expression
+class CallExpr : public Expr {
+public:
+    Expr* to_be_called;
+    Expr* actual_arg;
+
+    CallExpr(Expr* to_be_called, Expr* actual_arg);
+
+    bool equals(Expr* e) override;
+    Val* interp() override;
     Expr* subst(std::string s, Expr* e) override;
     void printExpr(std::ostream& out) override;
     void pretty_print(std::ostream& out) override;

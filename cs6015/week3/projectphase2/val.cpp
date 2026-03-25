@@ -75,3 +75,38 @@ Expr* BoolVal::to_expr() {
 bool BoolVal::is_true() {
     return val;
 }
+
+// FunVal
+FunVal::FunVal(std::string formal_arg, Expr* body) {
+    this->formal_arg = formal_arg;
+    this->body = body;
+}
+
+bool FunVal::equals(Val* other) {
+    FunVal* o = dynamic_cast<FunVal*>(other);
+    return o != nullptr &&
+           formal_arg == o->formal_arg &&
+           body->equals(o->body);
+}
+
+Val* FunVal::add_to(Val* other) {
+    (void)other;
+    throw std::runtime_error("Adding non-numbers");
+}
+
+Val* FunVal::mult_with(Val* other) {
+    (void)other;
+    throw std::runtime_error("Multiplying non-numbers");
+}
+
+std::string FunVal::to_string() {
+    return "[function]";
+}
+
+Expr* FunVal::to_expr() {
+    return new FunExpr(formal_arg, body);
+}
+
+bool FunVal::is_true() {
+    throw std::runtime_error("function is not a boolean");
+}

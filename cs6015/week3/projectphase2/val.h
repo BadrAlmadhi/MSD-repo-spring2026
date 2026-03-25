@@ -5,7 +5,7 @@
 class Expr;
 
 class Val {
-    public:
+public:
     virtual ~Val() = default;
 
     // compare two values for structural equality
@@ -25,17 +25,17 @@ class Val {
 };
 
 class NumVal : public Val {
-    public:
+public:
     int val;
 
     explicit NumVal(int val);
 
-    virtual bool equals(Val* other) override;
-    virtual Val* add_to(Val* other) override;
-    virtual Val* mult_with(Val* other) override;
-    virtual std::string to_string() override;
-    virtual Expr* to_expr() override;
-    virtual bool is_true() override;
+    bool equals(Val* other) override;
+    Val* add_to(Val* other) override;
+    Val* mult_with(Val* other) override;
+    std::string to_string() override;
+    Expr* to_expr() override;
+    bool is_true() override;
 };
 
 class BoolVal : public Val {
@@ -43,6 +43,21 @@ public:
     bool val;
 
     explicit BoolVal(bool val);
+
+    bool equals(Val* other) override;
+    Val* add_to(Val* other) override;
+    Val* mult_with(Val* other) override;
+    std::string to_string() override;
+    Expr* to_expr() override;
+    bool is_true() override;
+};
+
+class FunVal : public Val {
+public:
+    std::string formal_arg;
+    Expr* body;
+
+    FunVal(std::string formal_arg, Expr* body);
 
     bool equals(Val* other) override;
     Val* add_to(Val* other) override;
