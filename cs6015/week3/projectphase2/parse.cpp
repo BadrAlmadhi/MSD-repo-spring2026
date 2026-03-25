@@ -65,12 +65,15 @@ static int parse_number(std::istream &in) {
 }
 
 // forward declaration
-static Expr* parse_expr(std::istream &in);       
+static Expr* parse_expr(std::istream &in);      
+static Expr* parse_comparg(std::istream &in); 
 static Expr* parse_addend(std::istream &in);
 static Expr* parse_multicand(std::istream &in);
 static Expr* parse_inner(std::istream &in);
 
 // parse the smallest pieces : numbers, variable, parentheses, and _let
+
+// parse the smallest pieces : numbers, variable, parentheses, booleans, _if, and _let
 
 static Expr* parse_inner(std::istream &in) {
     skip_ws(in);
@@ -100,31 +103,73 @@ static Expr* parse_inner(std::istream &in) {
         return e;
     }
 
+    // keywords that start with _
     // _let x = expr _in expr
+    // _true
+    // _false
+    // _if expr _then expr _else expr
     if (c == '_') {
         consume(in, '_');
-        std::string kw = parse_identifier(in);  // expects "let"
+        std::string kw = parse_identifier(in);
 
-        if (kw != "let")
-            throw std::runtime_error("unknown keyword");
+        // _let x = expr _in expr
+        if (kw == "let") {
+            skip_ws(in);
+            std::string var = parse_identifier(in);
 
-        skip_ws(in);
-        std::string var = parse_identifier(in);
+            skip_ws(in);
+            consume(in, '=');
 
-        skip_ws(in);
-        consume(in, '=');
+            Expr* rhs = parse_expr(in);
 
-        Expr* rhs = parse_expr(in);
+            skip_ws(in);
+            consume(in, '_');
+            std::string in_kw = parse_identifier(in);
 
-        skip_ws(in);
-        consume(in, '_');
-        std::string in_kw = parse_identifier(in);
-        if (in_kw != "in")
-            throw std::runtime_error("expected _in");
+            if (in_kw != "in")
+                throw std::runtime_error("expected _in");
 
-        Expr* body = parse_expr(in);
+            Expr* body = parse_expr(in);
 
-        return new ExprLet(var, rhs, body);
+            return new ExprLet(var, rhs, body);
+        }
+
+        // boolean true
+        if (kw == "true") {
+            return new BoolExpr(true);
+        }
+
+        // boolean false
+        if (kw == "false") {
+            return new BoolExpr(false);
+        }
+
+        // _if expr _then expr _else expr
+        if (kw == "if") {
+            Expr* test_part = parse_expr(in);
+
+            skip_ws(in);
+            consume(in, '_');
+            std::string then_kw = parse_identifier(in);
+
+            if (then_kw != "then")
+                throw std::runtime_error("expected _then");
+
+            Expr* then_part = parse_expr(in);
+
+            skip_ws(in);
+            consume(in, '_');
+            std::string else_kw = parse_identifier(in);
+
+            if (else_kw != "else")
+                throw std::runtime_error("expected _else");
+
+            Expr* else_part = parse_expr(in);
+
+            return new IfExpr(test_part, then_part, else_part);
+        }
+
+        throw std::runtime_error("unknown keyword");
     }
 
     throw std::runtime_error("bad expression");
@@ -165,9 +210,29 @@ static Expr* parse_addend(std::istream &in) {
     return e;
 }
 
+// Parse equality level: addend ( == addend )*
+static Expr* parse_comparg(std::istream &in) {
+    // First, parse the left-most addend
+    Expr* e = parse_addend(in);
+    skip_ws(in);
+
+    // Build a left-associative chain for ==
+    while (in.peek() == '=') {
+        consume(in, '=');
+        consume(in, '=');
+
+        Expr* rhs = parse_addend(in);
+        e = new EqExpr(e, rhs);
+        skip_ws(in);
+    }
+
+    return e;
+}
+
+
 // Top-level expression (for your current language, expr == addend)
 static Expr* parse_expr(std::istream &in) {
-    return parse_addend(in);
+    return parse_comparg(in);
 }
 
 // Public parse functions
@@ -191,3 +256,4 @@ Expr* parse_str(const std::string &s) {
     std::istringstream in(s);
     return parse(in);
 }
+

@@ -15,11 +15,11 @@ int main(int argc, char **argv) {
         run_mode_t mode = use_arguments(argc, argv);
 
         switch (mode) {
-        case do_test:{
+        case do_test: {
             // Run Catch2 tests.
             // Return 0 if all pass, non-zero otherwise.
             int rc = Catch::Session().run();
-            return (rc = 0) ? 0 : 1; // this now enforce 0/1 only
+            return (rc == 0) ? 0 : 1; // this now enforce 0/1 only
         }
 
         case do_interp: {

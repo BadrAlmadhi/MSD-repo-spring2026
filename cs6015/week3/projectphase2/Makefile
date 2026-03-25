@@ -5,18 +5,17 @@ CXX = clang++
 # stop if UB happens
 CXXFLAGS = -std=c++17 -Wall -Wextra -fsanitize=undefined -fno-sanitize-recover=undefined
 
-#OBJS = main.o cmdline.o expr.o parse.o val.o test.o
 # Main program (includes tests)
-msdscript: main.o cmdline.o expr.o parse.o val.o
-	$(CXX) $(CXXFLAGS) main.o cmdline.o expr.o parse.o val.o -o msdscript
+msdscript: main.o cmdline.o expr.o parse.o val.o test.o test_val.o
+	$(CXX) $(CXXFLAGS) main.o cmdline.o expr.o parse.o val.o test.o test_val.o -o msdscript
 
-main.o: main.cpp cmdline.h expr.hpp parse.hpp
+main.o: main.cpp cmdline.h expr.hpp parse.hpp val.h catch.h
 	$(CXX) $(CXXFLAGS) -c main.cpp
 
 cmdline.o: cmdline.cpp cmdline.h
 	$(CXX) $(CXXFLAGS) -c cmdline.cpp
 
-expr.o: expr.cpp expr.hpp
+expr.o: expr.cpp expr.hpp val.h
 	$(CXX) $(CXXFLAGS) -c expr.cpp
 
 val.o: val.cpp val.h expr.hpp
@@ -27,12 +26,12 @@ parse.o: parse.cpp parse.hpp expr.hpp
 
 
 # -----------------------------
-# Unit tests (existing)
+# Unit tests
 # -----------------------------
 test: test.o test_val.o expr.o val.o
 	$(CXX) $(CXXFLAGS) test.o test_val.o expr.o val.o -o test
 
-test.o: test.cpp catch.h expr.hpp
+test.o: test.cpp catch.h expr.hpp val.h parse.hpp
 	$(CXX) $(CXXFLAGS) -c test.cpp
 
 test_val.o: test_val.cpp catch.h val.h expr.hpp
@@ -40,7 +39,7 @@ test_val.o: test_val.cpp catch.h val.h expr.hpp
 
 
 # -----------------------------
-# Random testing program (NEW)
+# Random testing program
 # -----------------------------
 test_msdscript: test_msdscript.cpp exec.cpp exec.h
 	$(CXX) $(CXXFLAGS) test_msdscript.cpp exec.cpp -o test_msdscript

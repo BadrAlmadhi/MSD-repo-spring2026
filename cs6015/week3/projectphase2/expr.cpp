@@ -1,6 +1,33 @@
 #include "expr.hpp"
 #include "val.h"
 #include <stdexcept>
+#include <sstream>
+#include <string>
+
+// helper 
+// return true if expression is a keyword form that usually needs special handling
+static bool is_keyword_expr(Expr* e) {
+    return dynamic_cast<ExprLet*>(e) != nullptr ||
+           dynamic_cast<IfExpr*>(e) != nullptr;
+}
+
+// print an expression after a prefix, and indent later lines to match the prefix
+static void print_multiline(std::ostream& out,
+                            std::string prefix,
+                            Expr* e,
+                            precedence_t prec) {
+    std::ostringstream temp;
+    e->pretty_print_at(temp, prec);
+    std::string s = temp.str();
+
+    out << prefix;
+    for (size_t i = 0; i < s.size(); i++) {
+        out << s[i];
+        if (s[i] == '\n' && i + 1 < s.size()) {
+            out << std::string(prefix.size(), ' ');
+        }
+    }
+}
 
 // =========================
 // ExprNum
@@ -120,7 +147,11 @@ void ExprAdd::pretty_print_at(std::ostream& out, precedence_t prec) {
 
     lhs->pretty_print_at(out, prec_add);
     out << " + ";
-    rhs->pretty_print_at(out, prec_none);
+
+    if (is_keyword_expr(rhs))
+        rhs->pretty_print_at(out, prec_add);
+    else
+        rhs->pretty_print_at(out, prec_none);
 
     if (need_parens)
         out << ")";
@@ -175,7 +206,9 @@ void ExprMult::pretty_print_at(std::ostream& out, precedence_t prec) {
     lhs->pretty_print_at(out, prec_mult);
     out << " * ";
 
-    if (dynamic_cast<ExprAdd*>(rhs) != nullptr || dynamic_cast<EqExpr*>(rhs) != nullptr)
+    if (dynamic_cast<ExprAdd*>(rhs) != nullptr ||
+        dynamic_cast<EqExpr*>(rhs) != nullptr ||
+        is_keyword_expr(rhs))
         rhs->pretty_print_at(out, prec_mult);
     else
         rhs->pretty_print_at(out, prec_none);
@@ -243,10 +276,12 @@ void ExprLet::pretty_print_at(std::ostream& out, precedence_t prec) {
     if (need_parens)
         out << "(";
 
-    out << "_let " << name << " = ";
-    rhs->pretty_print_at(out, prec_none);
-    out << "\n_in  ";
-    body->pretty_print_at(out, prec_none);
+    print_multiline(out, "_let " + name + " = ", rhs, prec_none);
+    out << "\n";
+
+    if (need_parens)
+        out << " ";
+    print_multiline(out, "_in  ", body, prec_none);
 
     if (need_parens)
         out << ")";
@@ -341,7 +376,11 @@ void EqExpr::pretty_print_at(std::ostream& out, precedence_t prec) {
 
     lhs->pretty_print_at(out, prec_eq);
     out << " == ";
-    rhs->pretty_print_at(out, prec_none);
+
+    if (is_keyword_expr(rhs))
+        rhs->pretty_print_at(out, prec_eq);
+    else
+        rhs->pretty_print_at(out, prec_none);
 
     if (need_parens)
         out << ")";
@@ -408,12 +447,11 @@ void IfExpr::pretty_print_at(std::ostream& out, precedence_t prec) {
     if (need_parens)
         out << "(";
 
-    out << "_if ";
-    test_part->pretty_print_at(out, prec_none);
-    out << "\n_then ";
-    then_part->pretty_print_at(out, prec_none);
-    out << "\n_else ";
-    else_part->pretty_print_at(out, prec_none);
+    print_multiline(out, "_if ", test_part, prec_none);
+    out << "\n";
+    print_multiline(out, "_then ", then_part, prec_none);
+    out << "\n";
+    print_multiline(out, "_else ", else_part, prec_none);
 
     if (need_parens)
         out << ")";
