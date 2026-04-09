@@ -42,12 +42,21 @@ bool ExprNum::equals(Expr* e) {
     return num != nullptr && this->value == num->value;
 }
 
+/**
+ * return a value NumVal()
+ * we can use in compution
+ * interp evaluate the experssion
+ * gives back result
+ * At runtime preduce NumVal(value); holds actual value
+*/
 Val* ExprNum::interp() {
     return new NumVal(value);
 }
 
-
-
+/**
+ * replace variable s with expersion e 
+ * subst("x", 3) = now x = 3
+ */
 Expr* ExprNum::subst(std::string s, Expr* e) {
     (void)s;
     (void)e;
@@ -66,6 +75,9 @@ void ExprNum::pretty_print_at(std::ostream& out, precedence_t) {
 // ExprVar
 // =========================
 
+/**
+ * store variable like x
+ */
 ExprVar::ExprVar(std::string var) {
     this->var = var;
 }
@@ -80,7 +92,7 @@ Val* ExprVar::interp() {
 }
 
 
-
+// here where substituting happen 
 Expr* ExprVar::subst(std::string s, Expr* e) {
     if (var == s)
         return e;
@@ -111,6 +123,7 @@ bool ExprAdd::equals(Expr* e) {
            rhs->equals(add->rhs);
 }
 
+// this uses val.cpp 
 Val* ExprAdd::interp() {
     return lhs->interp()->add_to(rhs->interp());
 }
@@ -228,9 +241,9 @@ bool ExprLet::equals(Expr* e) {
 }
 
 Val* ExprLet::interp() {
-    Val* rhs_val = rhs->interp();
-    Expr* new_body = body->subst(name, rhs_val->to_expr());
-    return new_body->interp();
+    Val* rhs_val = rhs->interp(); // 
+    Expr* new_body = body->subst(name, rhs_val->to_expr()); // turn value back into expression, then substitutr it into body
+    return new_body->interp(); // evaluate new body
 }
 
 

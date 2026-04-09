@@ -28,8 +28,8 @@ parse.o: parse.cpp parse.hpp expr.hpp
 # -----------------------------
 # Unit tests
 # -----------------------------
-test: test.o test_val.o expr.o val.o
-	$(CXX) $(CXXFLAGS) test.o test_val.o expr.o val.o -o test
+test: test.o test_val.o expr.o val.o parse.o
+	$(CXX) $(CXXFLAGS) test.o test_val.o expr.o val.o parse.o -o test
 
 test.o: test.cpp catch.h expr.hpp val.h parse.hpp
 	$(CXX) $(CXXFLAGS) -c test.cpp

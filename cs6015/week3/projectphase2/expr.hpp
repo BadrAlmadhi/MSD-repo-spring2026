@@ -12,6 +12,7 @@ typedef enum {
     prec_mult
 } precedence_t;
 
+// defin class Val
 class Val;
 
 // base class
