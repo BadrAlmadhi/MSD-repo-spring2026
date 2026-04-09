@@ -65,18 +65,18 @@ static int parse_number(std::istream &in) {
 }
 
 // forward declaration
-static Expr* parse_expr(std::istream &in);      
-static Expr* parse_comparg(std::istream &in); 
-static Expr* parse_addend(std::istream &in);
-static Expr* parse_multicand(std::istream &in);
-static Expr* parse_inner(std::istream &in);
-static Expr* parse_call(std::istream &in);
+static PTR(Expr) parse_expr(std::istream &in);      
+static PTR(Expr) parse_comparg(std::istream &in); 
+static PTR(Expr) parse_addend(std::istream &in);
+static PTR(Expr) parse_multicand(std::istream &in);
+static PTR(Expr) parse_inner(std::istream &in);
+static PTR(Expr) parse_call(std::istream &in);
 
 // parse the smallest pieces : numbers, variable, parentheses, and _let
 
 // parse the smallest pieces : numbers, variable, parentheses, booleans, _if, and _let
 
-static Expr* parse_inner(std::istream &in) {
+static PTR(Expr) parse_inner(std::istream &in) {
     skip_ws(in);
 
     int c = in.peek();
@@ -91,25 +91,25 @@ static Expr* parse_inner(std::istream &in) {
             throw std::runtime_error("bad expression");
 
         int n = parse_number(in);
-        return new ExprNum(-n);
+        return NEW(ExprNum)(-n);
     }
 
     // number
     if (std::isdigit(c)) {
         int n = parse_number(in);
-        return new ExprNum(n);
+        return NEW(ExprNum)(n);
     }
 
     // variable name
     if (std::isalpha(c)) {
         std::string name = parse_identifier(in);
-        return new ExprVar(name);
+        return NEW(ExprVar)(name);
     }
 
     // parentheses: ( expr )
     if (c == '(') {
         consume(in, '(');
-        Expr* e = parse_expr(in);
+        PTR(Expr) e = parse_expr(in);
         skip_ws(in);
         consume(in, ')');
         return e;
@@ -133,7 +133,7 @@ static Expr* parse_inner(std::istream &in) {
             skip_ws(in);
             consume(in, '=');
 
-            Expr* rhs = parse_expr(in);
+            PTR(Expr) rhs = parse_expr(in);
 
             skip_ws(in);
             consume(in, '_');
@@ -142,24 +142,24 @@ static Expr* parse_inner(std::istream &in) {
             if (in_kw != "in")
                 throw std::runtime_error("expected _in");
 
-            Expr* body = parse_expr(in);
+            PTR(Expr) body = parse_expr(in);
 
-            return new ExprLet(var, rhs, body);
+            return NEW(ExprLet)(var, rhs, body);
         }
 
         // boolean true
         if (kw == "true") {
-            return new BoolExpr(true);
+            return NEW(BoolExpr)(true);
         }
 
         // boolean false
         if (kw == "false") {
-            return new BoolExpr(false);
+            return NEW(BoolExpr)(false);
         }
 
         // _if expr _then expr _else expr
         if (kw == "if") {
-            Expr* test_part = parse_expr(in);
+            PTR(Expr) test_part = parse_expr(in);
 
             skip_ws(in);
             consume(in, '_');
@@ -168,7 +168,7 @@ static Expr* parse_inner(std::istream &in) {
             if (then_kw != "then")
                 throw std::runtime_error("expected _then");
 
-            Expr* then_part = parse_expr(in);
+            PTR(Expr) then_part = parse_expr(in);
 
             skip_ws(in);
             consume(in, '_');
@@ -177,9 +177,9 @@ static Expr* parse_inner(std::istream &in) {
             if (else_kw != "else")
                 throw std::runtime_error("expected _else");
 
-            Expr* else_part = parse_expr(in);
+            PTR(Expr) else_part = parse_expr(in);
 
-            return new IfExpr(test_part, then_part, else_part);
+            return NEW(IfExpr)(test_part, then_part, else_part);
         }
 
         // _fun (x) expr
@@ -190,8 +190,8 @@ static Expr* parse_inner(std::istream &in) {
             skip_ws(in);
             consume(in, ')');
 
-            Expr* body = parse_expr(in);
-            return new FunExpr(arg, body);
+            PTR(Expr) body = parse_expr(in);
+            return NEW(FunExpr)(arg, body);
         }
 
         throw std::runtime_error("unknown keyword");
@@ -201,17 +201,17 @@ static Expr* parse_inner(std::istream &in) {
 }
 
 // Parse multiplication level: inner ( * inner )*
-static Expr* parse_multicand(std::istream &in) {
+static PTR(Expr) parse_multicand(std::istream &in) {
     // First, parse the left-most inner expression
-    Expr* e = parse_call(in);
+    PTR(Expr) e = parse_call(in);
     skip_ws(in);
 
     // If we see '*', keep building a left-associative chain:
     // a*b*c becomes Mult(Mult(a,b),c)
     while (in.peek() == '*') {
         consume(in, '*');
-        Expr* rhs = parse_call(in);
-        e = new ExprMult(e, rhs);
+        PTR(Expr) rhs = parse_call(in);
+        e = NEW(ExprMult)(e, rhs);
         skip_ws(in);
     }
 
@@ -219,16 +219,16 @@ static Expr* parse_multicand(std::istream &in) {
 }
 
 // Parse addition level: multicand ( + multicand )*
-static Expr* parse_addend(std::istream &in) {
+static PTR(Expr) parse_addend(std::istream &in) {
     // First, parse the left-most multicand
-    Expr* e = parse_multicand(in);
+    PTR(Expr) e = parse_multicand(in);
     skip_ws(in);
 
     // Build a left-associative chain for '+'
     while (in.peek() == '+') {
         consume(in, '+');
-        Expr* rhs = parse_multicand(in);
-        e = new ExprAdd(e, rhs);
+        PTR(Expr) rhs = parse_multicand(in);
+        e = NEW(ExprAdd)(e, rhs);
         skip_ws(in);
     }
 
@@ -236,9 +236,9 @@ static Expr* parse_addend(std::istream &in) {
 }
 
 // Parse equality level: addend ( == addend )*
-static Expr* parse_comparg(std::istream &in) {
+static PTR(Expr) parse_comparg(std::istream &in) {
     // First, parse the left-most addend
-    Expr* e = parse_addend(in);
+    PTR(Expr) e = parse_addend(in);
     skip_ws(in);
 
     // Build a left-associative chain for ==
@@ -246,8 +246,8 @@ static Expr* parse_comparg(std::istream &in) {
         consume(in, '=');
         consume(in, '=');
 
-        Expr* rhs = parse_addend(in);
-        e = new EqExpr(e, rhs);
+        PTR(Expr) rhs = parse_addend(in);
+        e = NEW(EqExpr)(e, rhs);
         skip_ws(in);
     }
 
@@ -255,17 +255,17 @@ static Expr* parse_comparg(std::istream &in) {
 }
 
 // Parse function call level: inner ( (expr) )*
-static Expr* parse_call(std::istream &in) {
-    Expr* e = parse_inner(in);
+static PTR(Expr) parse_call(std::istream &in) {
+    PTR(Expr) e = parse_inner(in);
     skip_ws(in);
 
     while (in.peek() == '(') {
         consume(in, '(');
-        Expr* arg = parse_expr(in);
+        PTR(Expr) arg = parse_expr(in);
         skip_ws(in);
         consume(in, ')');
 
-        e = new CallExpr(e, arg);
+        e = NEW(CallExpr)(e, arg);
         skip_ws(in);
     }
 
@@ -274,14 +274,14 @@ static Expr* parse_call(std::istream &in) {
 
 
 // Top-level expression (for your current language, expr == addend)
-static Expr* parse_expr(std::istream &in) {
+static PTR(Expr) parse_expr(std::istream &in) {
     return parse_comparg(in);
 }
 
 // Public parse functions
-Expr* parse(std::istream &in) {
+PTR(Expr) parse(std::istream &in) {
     // Parse one expression
-    Expr* e = parse_expr(in);
+    PTR(Expr) e = parse_expr(in);
 
     // After parsing, allow whitespace
     skip_ws(in);
@@ -294,7 +294,7 @@ Expr* parse(std::istream &in) {
     return e;
 }
 
-Expr* parse_str(const std::string &s) {
+PTR(Expr) parse_str(const std::string &s) {
     // Used in tests: make a stream from a string, then call parse(stream)
     std::istringstream in(s);
     return parse(in);

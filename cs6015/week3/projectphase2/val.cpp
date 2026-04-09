@@ -10,9 +10,9 @@ NumVal::NumVal(int val){
 /**
  * try convert other into NumVal*
  */
-bool NumVal::equals(Val* other) {
+bool NumVal::equals(PTR(Val) other) {
     // convert other to NumVal* because other can be BoolVal, FunVal
-    NumVal* o = dynamic_cast<NumVal*>(other);
+    PTR(NumVal) o = CAST(NumVal)(other);
     // if other is really NumVal compare stored integer
     return o != nullptr && val == o->val;
 }
@@ -20,9 +20,9 @@ bool NumVal::equals(Val* other) {
 /**
  * Addistion only allowed with number
  */
-Val* NumVal::add_to(Val* other) {
+PTR(Val) NumVal::add_to(PTR(Val) other) {
     // convert other to NumVal
-    NumVal* o = dynamic_cast<NumVal*>(other);
+    PTR(NumVal) o = CAST(NumVal)(other);
     if (o == nullptr)
         // only accept two numbers
         // 5 + _true = not allowed
@@ -33,12 +33,12 @@ Val* NumVal::add_to(Val* other) {
     if (result > INT_MAX || result < INT_MIN)
         throw std::runtime_error("integer overflow in addition");
         // retrun converted int and retrun numeric value
-    return new NumVal((int)result);
+    return NEW(NumVal)((int)result);
 }
 
 // same idea as add_to
-Val* NumVal::mult_with(Val* other) {
-    NumVal* o = dynamic_cast<NumVal*>(other);
+PTR(Val) NumVal::mult_with(PTR(Val) other) {
+    PTR(NumVal) o = CAST(NumVal)(other);
     if (o == nullptr)
         throw std::runtime_error("Multiplying non-numbers");
 
@@ -47,7 +47,7 @@ Val* NumVal::mult_with(Val* other) {
     if (result > INT_MAX || result < INT_MIN)
         throw std::runtime_error("integer overflow in multiplication");
 
-    return new NumVal((int)result);
+    return NEW(NumVal)((int)result);
 }
 
 // converts stored int into string 
@@ -58,8 +58,8 @@ std::string NumVal::to_string() {
 // convert to expr
 // needed for substittution 
 // while subts we need Expr not val
-Expr* NumVal::to_expr() {
-    return new ExprNum(val);
+PTR(Expr) NumVal::to_expr() {
+    return NEW(ExprNum)(val);
 }
 
 // 
@@ -73,20 +73,20 @@ BoolVal::BoolVal(bool val) {
 }
 
 // equallity
-bool BoolVal::equals(Val* other) {
+bool BoolVal::equals(PTR(Val) other) {
     // convert to BoolVal
-    BoolVal* o = dynamic_cast<BoolVal*>(other);
+    PTR(BoolVal) o = CAST(BoolVal)(other);
     // then compare BoolVal
     return o != nullptr && val == o->val;
 }
 
 // BoolVal cannot be added
-Val* BoolVal::add_to(Val* other) {
+PTR(Val) BoolVal::add_to(PTR(Val) other) {
     (void)other; // silence unused parameter waring
     throw std::runtime_error("Adding non-numbers");
 }
 
-Val* BoolVal::mult_with(Val* other) {
+PTR(Val) BoolVal::mult_with(PTR(Val) other) {
     (void)other; // cannot be mult
     throw std::runtime_error("Multiplying non-numbers");
 }
@@ -97,8 +97,8 @@ std::string BoolVal::to_string() {
 }
 
 // make it Expr
-Expr* BoolVal::to_expr() {
-    return new BoolExpr(val);
+PTR(Expr) BoolVal::to_expr() {
+    return NEW(BoolExpr)(val);
 }
 
 // BoolVal::is_true() when it's runs in expr.cpp return BoolVal::is_true()
@@ -107,26 +107,26 @@ bool BoolVal::is_true() {
 }
 
 // FunVal
-FunVal::FunVal(std::string formal_arg, Expr* body) {
+FunVal::FunVal(std::string formal_arg, PTR(Expr) body) {
     this->formal_arg = formal_arg;
     this->body = body;
 }
 
-bool FunVal::equals(Val* other) {
+bool FunVal::equals(PTR(Val) other) {
     // convert to FunVal 
-    FunVal* o = dynamic_cast<FunVal*>(other);
+    PTR(FunVal) o = CAST(FunVal)(other);
     return o != nullptr &&
     // compare if both are function 
            formal_arg == o->formal_arg &&
            body->equals(o->body);
 }
 
-Val* FunVal::add_to(Val* other) {
+PTR(Val) FunVal::add_to(PTR(Val) other) {
     (void)other; // cannot add function 
     throw std::runtime_error("Adding non-numbers");
 }
 
-Val* FunVal::mult_with(Val* other) {
+PTR(Val) FunVal::mult_with(PTR(Val) other) {
     (void)other; // cannot mult function 
     throw std::runtime_error("Multiplying non-numbers");
 }
@@ -135,9 +135,9 @@ std::string FunVal::to_string() {
     return "[function]"; // just prin [function]
 }
 
-Expr* FunVal::to_expr() {
+PTR(Expr) FunVal::to_expr() {
     // convert to ExprFun
-    return new FunExpr(formal_arg, body);
+    return NEW(FunExpr)(formal_arg, body);
 }
 
 // prevent nonsense 

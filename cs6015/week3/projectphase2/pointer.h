@@ -3,14 +3,16 @@
 
 #include <memory>
 
-#define USE_PLAIN_POINTERS 1
+// controls eveything
+#define USE_PLAIN_POINTERS 0
 #if USE_PLAIN_POINTERS
 
-# define NEW(T)    new T
-# define PTR(T)    T*
-# define CAST(T)   dynamic_cast<T*>
-# define CLASS(T)  class T
-# define THIS      this
+// user macros shortcuts
+# define NEW(T)    new T // NEW(Num) = new Num
+# define PTR(T)    T*    // PTR(Num) = Num*
+# define CAST(T)   dynamic_cast<T*> // dynamic_cast<Num*>
+# define CLASS(T)  class T // update each class to CLASS
+# define THIS      this 
 
 #else
 

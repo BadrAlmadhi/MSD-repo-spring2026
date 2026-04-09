@@ -1,5 +1,3 @@
-#define CATCH_CONFIG_RUNNER
-#include "catch.h"
 
 #include <cstring>
 #include <iostream>
@@ -15,28 +13,27 @@ int main(int argc, char **argv) {
         run_mode_t mode = use_arguments(argc, argv);
 
         switch (mode) {
-        case do_test: {
-            // Run Catch2 tests.
-            // Return 0 if all pass, non-zero otherwise.
-            int rc = Catch::Session().run();
-            return (rc == 0) ? 0 : 1; // this now enforce 0/1 only
+        
+            case do_test: {
+            std::cerr << "Run tests using the test executable\n";
+            return 1;
         }
 
         case do_interp: {
-            Expr* e = parse(std::cin);
+            PTR(Expr) e = parse(std::cin);
             std::cout << e->interp()->to_string() << "\n";
             return 0;
         }
 
         case do_print: {
-            Expr* e = parse(std::cin);
+            PTR(Expr) e = parse(std::cin);
             std::cout << e->to_string() << "\n";
             return 0;
         }
 
         case do_pretty_print: {
             // Parse expression from stdin, then pretty print it.
-            Expr* e = parse(std::cin);
+            PTR(Expr) e = parse(std::cin);
             std::cout << e->to_pretty_string() << "\n";
             return 0;
         }

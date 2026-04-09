@@ -6,8 +6,8 @@ CXX = clang++
 CXXFLAGS = -std=c++17 -Wall -Wextra -fsanitize=undefined -fno-sanitize-recover=undefined
 
 # Main program (includes tests)
-msdscript: main.o cmdline.o expr.o parse.o val.o test.o test_val.o
-	$(CXX) $(CXXFLAGS) main.o cmdline.o expr.o parse.o val.o test.o test_val.o -o msdscript
+msdscript: main.o cmdline.o expr.o parse.o val.o
+	$(CXX) $(CXXFLAGS) main.o cmdline.o expr.o parse.o val.o -o msdscript
 
 main.o: main.cpp cmdline.h expr.hpp parse.hpp val.h catch.h
 	$(CXX) $(CXXFLAGS) -c main.cpp

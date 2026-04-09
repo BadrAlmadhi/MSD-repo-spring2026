@@ -4,6 +4,7 @@
 #include <string>
 #include <iostream>
 #include <sstream>
+#include "pointer.h"
 
 typedef enum {
     prec_none,
@@ -16,13 +17,13 @@ typedef enum {
 class Val;
 
 // base class
-class Expr {
+CLASS(Expr) {
 public:
-    virtual ~Expr() = default;
+    virtual ~Expr() {}
 
-    virtual bool equals(Expr *e) = 0;
-    virtual Val* interp() = 0;
-    virtual Expr* subst(std::string, Expr* e) = 0;
+    virtual bool equals(PTR(Expr) e) = 0;
+    virtual PTR(Val) interp() = 0;
+    virtual PTR(Expr) subst(std::string, PTR(Expr) e) = 0;
 
     virtual void printExpr(std::ostream& out) = 0;
 
@@ -54,9 +55,9 @@ public:
 
     ExprNum(int value);
 
-    bool equals(Expr* e) override;
-    Val* interp() override;
-    Expr* subst(std::string s, Expr* e) override;
+    bool equals(PTR(Expr) e) override;
+    PTR(Val) interp() override;
+    PTR(Expr) subst(std::string s, PTR(Expr) e) override;
     void printExpr(std::ostream& out) override;
     void pretty_print_at(std::ostream& out, precedence_t) override;
 };
@@ -64,14 +65,14 @@ public:
 // Add Expression
 class ExprAdd : public Expr {
 public:
-    Expr* lhs;
-    Expr* rhs;
+    PTR(Expr) lhs;
+    PTR(Expr) rhs;
 
-    ExprAdd(Expr* lhs, Expr* rhs);
+    ExprAdd(PTR(Expr) lhs, PTR(Expr) rhs);
 
-    bool equals(Expr* e) override;
-    Val* interp() override;
-    Expr* subst(std::string s, Expr* e) override;
+    bool equals(PTR(Expr) e) override;
+    PTR(Val) interp() override;
+    PTR(Expr) subst(std::string s, PTR(Expr) e) override;
     void printExpr(std::ostream& out) override;
     void pretty_print(std::ostream& out) override;
     void pretty_print_at(std::ostream& out, precedence_t) override;
@@ -80,14 +81,14 @@ public:
 // Multiply Expression
 class ExprMult : public Expr {
 public:
-    Expr* lhs;
-    Expr* rhs;
+    PTR(Expr) lhs;
+    PTR(Expr) rhs;
 
-    ExprMult(Expr* lhs, Expr* rhs);
+    ExprMult(PTR(Expr) lhs, PTR(Expr) rhs);
 
-    bool equals(Expr* e) override;
-    Val* interp() override;
-    Expr* subst(std::string s, Expr* e) override;
+    bool equals(PTR(Expr) e) override;
+    PTR(Val) interp() override;
+    PTR(Expr) subst(std::string s, PTR(Expr) e) override;
     void printExpr(std::ostream& out) override;
     void pretty_print(std::ostream& out) override;
     void pretty_print_at(std::ostream& out, precedence_t) override;
@@ -100,9 +101,9 @@ public:
 
     ExprVar(std::string var);
 
-    bool equals(Expr* e) override;
-    Val* interp() override;
-    Expr* subst(std::string s, Expr* e) override;
+    bool equals(PTR(Expr) e) override;
+    PTR(Val) interp() override;
+    PTR(Expr) subst(std::string s, PTR(Expr) e) override;
     void printExpr(std::ostream& out) override;
     void pretty_print_at(std::ostream& out, precedence_t) override;
 };
@@ -111,14 +112,14 @@ public:
 class ExprLet : public Expr {
 public:
     std::string name;
-    Expr* rhs;
-    Expr* body;
+    PTR(Expr) rhs;
+    PTR(Expr) body;
 
-    ExprLet(std::string name, Expr* rhs, Expr* body);
+    ExprLet(std::string name, PTR(Expr) rhs, PTR(Expr) body);
 
-    bool equals(Expr* e) override;
-    Val* interp() override;
-    Expr* subst(std::string s, Expr* e) override;
+    bool equals(PTR(Expr) e) override;
+    PTR(Val) interp() override;
+    PTR(Expr) subst(std::string s, PTR(Expr) e) override;
     void printExpr(std::ostream& out) override;
     void pretty_print(std::ostream& out) override;
     void pretty_print_at(std::ostream& out, precedence_t prec) override;
@@ -131,9 +132,9 @@ public:
 
     BoolExpr(bool value);
 
-    bool equals(Expr* e) override;
-    Val* interp() override;
-    Expr* subst(std::string s, Expr* e) override;
+    bool equals(PTR(Expr) e) override;
+    PTR(Val) interp() override;
+    PTR(Expr) subst(std::string s, PTR(Expr) e) override;
     void printExpr(std::ostream& out) override;
     void pretty_print(std::ostream& out) override;
     void pretty_print_at(std::ostream& out, precedence_t) override;
@@ -142,14 +143,14 @@ public:
 // Equality Expression
 class EqExpr : public Expr {
 public:
-    Expr* lhs;
-    Expr* rhs;
+    PTR(Expr) lhs;
+    PTR(Expr) rhs;
 
-    EqExpr(Expr* lhs, Expr* rhs);
+    EqExpr(PTR(Expr) lhs, PTR(Expr) rhs);
 
-    bool equals(Expr* e) override;
-    Val* interp() override;
-    Expr* subst(std::string s, Expr* e) override;
+    bool equals(PTR(Expr) e) override;
+    PTR(Val) interp() override;
+    PTR(Expr) subst(std::string s, PTR(Expr) e) override;
     void printExpr(std::ostream& out) override;
     void pretty_print(std::ostream& out) override;
     void pretty_print_at(std::ostream& out, precedence_t prec) override;
@@ -158,15 +159,15 @@ public:
 // If Expression
 class IfExpr : public Expr {
 public:
-    Expr* test_part;
-    Expr* then_part;
-    Expr* else_part;
+    PTR(Expr) test_part;
+    PTR(Expr) then_part;
+    PTR(Expr) else_part;
 
-    IfExpr(Expr* test_part, Expr* then_part, Expr* else_part);
+    IfExpr(PTR(Expr) test_part, PTR(Expr) then_part, PTR(Expr) else_part);
 
-    bool equals(Expr* e) override;
-    Val* interp() override;
-    Expr* subst(std::string s, Expr* e) override;
+    bool equals(PTR(Expr) e) override;
+    PTR(Val) interp() override;
+    PTR(Expr) subst(std::string s, PTR(Expr) e) override;
     void printExpr(std::ostream& out) override;
     void pretty_print(std::ostream& out) override;
     void pretty_print_at(std::ostream& out, precedence_t prec) override;
@@ -177,13 +178,13 @@ public:
 class FunExpr : public Expr {
 public:
     std::string formal_arg;
-    Expr* body;
+    PTR(Expr) body;
 
-    FunExpr(std::string formal_arg, Expr* body);
+    FunExpr(std::string formal_arg, PTR(Expr) body);
 
-    bool equals(Expr* e) override;
-    Val* interp() override;
-    Expr* subst(std::string s, Expr* e) override;
+    bool equals(PTR(Expr) e) override;
+    PTR(Val) interp() override;
+    PTR(Expr) subst(std::string s, PTR(Expr) e) override;
     void printExpr(std::ostream& out) override;
     void pretty_print(std::ostream& out) override;
     void pretty_print_at(std::ostream& out, precedence_t prec) override;
@@ -192,14 +193,14 @@ public:
 // Function Call Expression
 class CallExpr : public Expr {
 public:
-    Expr* to_be_called;
-    Expr* actual_arg;
+    PTR(Expr) to_be_called;
+    PTR(Expr) actual_arg;
 
-    CallExpr(Expr* to_be_called, Expr* actual_arg);
+    CallExpr(PTR(Expr) to_be_called, PTR(Expr) actual_arg);
 
-    bool equals(Expr* e) override;
-    Val* interp() override;
-    Expr* subst(std::string s, Expr* e) override;
+    bool equals(PTR(Expr) e) override;
+    PTR(Val) interp() override;
+    PTR(Expr) subst(std::string s, PTR(Expr) e) override;
     void printExpr(std::ostream& out) override;
     void pretty_print(std::ostream& out) override;
     void pretty_print_at(std::ostream& out, precedence_t prec) override;

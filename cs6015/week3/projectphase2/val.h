@@ -1,25 +1,26 @@
 #pragma once
 #include <string>
+#include "pointer.h"
 
 // forward declaration 
 class Expr;
 
-class Val {
+CLASS(Val) {
 public:
-    virtual ~Val() = default;
+    virtual ~Val() {}
 
     // compare two values for structural equality
-    virtual bool equals(Val* other) = 0;
+    virtual bool equals(PTR(Val) other) = 0;
 
     // operation add and mult 
-    virtual Val* add_to(Val* other) = 0;
-    virtual Val* mult_with(Val* other) = 0;
+    virtual PTR(Val) add_to(PTR(Val) other) = 0;
+    virtual PTR(Val) mult_with(PTR(Val) other) = 0;
 
     // print result of interp()
     virtual std::string to_string() = 0;
 
     // convert value back to expr
-    virtual Expr* to_expr() = 0;
+    virtual PTR(Expr) to_expr() = 0;
 
     virtual bool is_true() = 0;
 };
@@ -30,11 +31,11 @@ public:
 
     explicit NumVal(int val);
 
-    bool equals(Val* other) override;
-    Val* add_to(Val* other) override;
-    Val* mult_with(Val* other) override;
+    bool equals(PTR(Val) other) override;
+    PTR(Val) add_to(PTR(Val) other) override;
+    PTR(Val) mult_with(PTR(Val) other) override;
     std::string to_string() override;
-    Expr* to_expr() override;
+    PTR(Expr) to_expr() override;
     bool is_true() override;
 };
 
@@ -44,25 +45,25 @@ public:
 
     explicit BoolVal(bool val);
 
-    bool equals(Val* other) override;
-    Val* add_to(Val* other) override;
-    Val* mult_with(Val* other) override;
+    bool equals(PTR(Val) other) override;
+    PTR(Val) add_to(PTR(Val) other) override;
+    PTR(Val) mult_with(PTR(Val) other) override;
     std::string to_string() override;
-    Expr* to_expr() override;
+    PTR(Expr) to_expr() override;
     bool is_true() override;
 };
 
 class FunVal : public Val {
 public:
     std::string formal_arg;
-    Expr* body;
+    PTR(Expr) body;
 
-    FunVal(std::string formal_arg, Expr* body);
+    FunVal(std::string formal_arg, PTR(Expr) body);
 
-    bool equals(Val* other) override;
-    Val* add_to(Val* other) override;
-    Val* mult_with(Val* other) override;
+    bool equals(PTR(Val) other) override;
+    PTR(Val) add_to(PTR(Val) other) override;
+    PTR(Val) mult_with(PTR(Val) other) override;
     std::string to_string() override;
-    Expr* to_expr() override;
+    PTR(Expr) to_expr() override;
     bool is_true() override;
 };
