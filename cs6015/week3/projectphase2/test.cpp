@@ -7,6 +7,7 @@
 #include "parse.hpp"
 #include "pointer.h"
 #include <climits>
+#include "env.h"
 
 TEST_CASE("Check if values are equals") {
     CHECK( (NEW(ExprNum)(3))->equals(NEW(ExprNum)(3)) == true);
@@ -41,23 +42,23 @@ TEST_CASE("Wrong type in Add and Mult") {
 }
 
 TEST_CASE("Tets interp 'Total sum of an expression' if return sum value") {
-    CHECK( (NEW(ExprNum)(3))->interp()->equals(NEW(NumVal)(3)));
-    CHECK( (NEW(ExprAdd)(NEW(ExprNum)(3), NEW(ExprNum)(3)))->interp()->equals(NEW(NumVal)(6)));
-    CHECK( (NEW(ExprMult)(NEW(ExprNum)(10), NEW(ExprNum)(10)))->interp()->equals(NEW(NumVal)(100)));
-    CHECK_THROWS_WITH((NEW(ExprVar)("X"))->interp(), "free variable: X");
+    CHECK( (NEW(ExprNum)(3))->interp(Env::empty)->equals(NEW(NumVal)(3)));
+    CHECK( (NEW(ExprAdd)(NEW(ExprNum)(3), NEW(ExprNum)(3)))->interp(Env::empty)->equals(NEW(NumVal)(6)));
+    CHECK( (NEW(ExprMult)(NEW(ExprNum)(10), NEW(ExprNum)(10)))->interp(Env::empty)->equals(NEW(NumVal)(100)));
+    CHECK_THROWS_WITH((NEW(ExprVar)("X"))->interp(Env::empty), "free variable: X");
 }
 
 TEST_CASE("Nested expressions") {
    CHECK(
     (NEW(ExprAdd)(NEW(ExprAdd)(NEW(ExprNum)(10), NEW(ExprNum)(15)),
    NEW(ExprAdd)(NEW(ExprNum)(20), NEW(ExprNum)(20))
-))->interp()->equals(NEW(NumVal)(65)));
+))->interp(Env::empty)->equals(NEW(NumVal)(65)));
 
 CHECK(
   (NEW(ExprMult)(
       NEW(ExprAdd)(NEW(ExprNum)(2), NEW(ExprNum)(3)),
       NEW(ExprNum)(4)
-  ))->interp()->equals(NEW(NumVal)(20))
+  ))->interp(Env::empty)->equals(NEW(NumVal)(20))
 );
 }
 
@@ -110,8 +111,8 @@ TEST_CASE("Let pretty_print") {
 }
 
 TEST_CASE("Function interp") {
-    CHECK(parse_str("_let f = _fun (x) x + 1 _in f(5)")->interp()->equals(NEW(NumVal)(6)));
-    CHECK(parse_str("_let f = _fun (x) x * 2 _in f(4)")->interp()->equals(NEW(NumVal)(8)));
+    CHECK(parse_str("_let f = _fun (x) x + 1 _in f(5)")->interp(Env::empty)->equals(NEW(NumVal)(6)));
+    CHECK(parse_str("_let f = _fun (x) x * 2 _in f(4)")->interp(Env::empty)->equals(NEW(NumVal)(8)));
 }
 
 TEST_CASE("Function print") {
@@ -126,41 +127,28 @@ TEST_CASE("Function pretty print") {
 }
 
 TEST_CASE("BoolExpr basics") {
-    CHECK((NEW(BoolExpr)(true))->interp()->equals(NEW(BoolVal)(true)));
-    CHECK((NEW(BoolExpr)(false))->interp()->equals(NEW(BoolVal)(false)));
+    CHECK((NEW(BoolExpr)(true))->interp(Env::empty)->equals(NEW(BoolVal)(true)));
+    CHECK((NEW(BoolExpr)(false))->interp(Env::empty)->equals(NEW(BoolVal)(false)));
     CHECK((NEW(BoolExpr)(true))->to_string() == "_true");
     CHECK((NEW(BoolExpr)(false))->to_string() == "_false");
 }
 
 TEST_CASE("EqExpr interp") {
-    CHECK((NEW(EqExpr)(NEW(ExprNum)(5), NEW(ExprNum)(5)))->interp()->equals(NEW(BoolVal)(true)));
-    CHECK((NEW(EqExpr)(NEW(ExprNum)(5), NEW(ExprNum)(6)))->interp()->equals(NEW(BoolVal)(false)));
+    CHECK((NEW(EqExpr)(NEW(ExprNum)(5), NEW(ExprNum)(5)))->interp(Env::empty)->equals(NEW(BoolVal)(true)));
+    CHECK((NEW(EqExpr)(NEW(ExprNum)(5), NEW(ExprNum)(6)))->interp(Env::empty)->equals(NEW(BoolVal)(false)));
 }
 
 TEST_CASE("IfExpr interp") {
     CHECK((NEW(IfExpr)(NEW(BoolExpr)(true), NEW(ExprNum)(1), NEW(ExprNum)(2)))
-          ->interp()->equals(NEW(NumVal)(1)));
+          ->interp(Env::empty)->equals(NEW(NumVal)(1)));
 
     CHECK((NEW(IfExpr)(NEW(BoolExpr)(false), NEW(ExprNum)(1), NEW(ExprNum)(2)))
-          ->interp()->equals(NEW(NumVal)(2)));
+          ->interp(Env::empty)->equals(NEW(NumVal)(2)));
 
-    CHECK_THROWS_WITH((NEW(IfExpr)(NEW(ExprNum)(5), NEW(ExprNum)(1), NEW(ExprNum)(2)))->interp(),
+    CHECK_THROWS_WITH((NEW(IfExpr)(NEW(ExprNum)(5), NEW(ExprNum)(1), NEW(ExprNum)(2)))->interp(Env::empty),
                       "NumVal has no truth value");
 }
 
-TEST_CASE("subst basics") {
-    CHECK((NEW(ExprVar)("x")->subst("x", NEW(ExprNum)(5)))->equals(NEW(ExprNum)(5)));
-    CHECK((NEW(ExprVar)("y")->subst("x", NEW(ExprNum)(5)))->equals(NEW(ExprVar)("y")));
-    CHECK((NEW(ExprAdd)(NEW(ExprVar)("x"), NEW(ExprNum)(2))
-          ->subst("x", NEW(ExprNum)(5)))
-          ->equals(NEW(ExprAdd)(NEW(ExprNum)(5), NEW(ExprNum)(2))));
-}
-
-TEST_CASE("subst with let shadowing") {
-    CHECK((NEW(ExprLet)("x", NEW(ExprNum)(10), NEW(ExprVar)("x"))
-          ->subst("x", NEW(ExprNum)(5)))
-          ->equals(NEW(ExprLet)("x", NEW(ExprNum)(10), NEW(ExprVar)("x"))));
-}
 
 TEST_CASE("parse errors") {
     CHECK_THROWS(parse_str("1 +"));
@@ -169,13 +157,13 @@ TEST_CASE("parse errors") {
 
 TEST_CASE("FunVal basics") {
     CHECK((NEW(FunExpr)("x", NEW(ExprAdd)(NEW(ExprVar)("x"), NEW(ExprNum)(1))))
-          ->interp()->to_string() == "[function]");
+          ->interp(Env::empty)->to_string() == "[function]");
 }
 
 TEST_CASE("overflow checks") {
-    CHECK_THROWS_WITH((NEW(ExprAdd)(NEW(ExprNum)(INT_MAX), NEW(ExprNum)(1)))->interp(),
+    CHECK_THROWS_WITH((NEW(ExprAdd)(NEW(ExprNum)(INT_MAX), NEW(ExprNum)(1)))->interp(Env::empty),
                       "integer overflow in addition");
 
-    CHECK_THROWS_WITH((NEW(ExprMult)(NEW(ExprNum)(INT_MAX), NEW(ExprNum)(2)))->interp(),
+    CHECK_THROWS_WITH((NEW(ExprMult)(NEW(ExprNum)(INT_MAX), NEW(ExprNum)(2)))->interp(Env::empty),
                       "integer overflow in multiplication");
 }

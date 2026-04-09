@@ -6,6 +6,7 @@
 #include "expr.hpp"
 #include "parse.hpp"
 #include "val.h"
+#include "env.h"
 
 int main(int argc, char **argv) {
     try {
@@ -21,7 +22,7 @@ int main(int argc, char **argv) {
 
         case do_interp: {
             PTR(Expr) e = parse(std::cin);
-            std::cout << e->interp()->to_string() << "\n";
+            std::cout << e->interp(Env::empty)->to_string() << "\n";
             return 0;
         }
 

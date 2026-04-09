@@ -6,8 +6,8 @@ CXX = clang++
 CXXFLAGS = -std=c++17 -Wall -Wextra -fsanitize=undefined -fno-sanitize-recover=undefined
 
 # Main program (includes tests)
-msdscript: main.o cmdline.o expr.o parse.o val.o
-	$(CXX) $(CXXFLAGS) main.o cmdline.o expr.o parse.o val.o -o msdscript
+msdscript: main.o cmdline.o expr.o parse.o val.o env.o
+	$(CXX) $(CXXFLAGS) main.o cmdline.o expr.o parse.o val.o env.o -o msdscript
 
 main.o: main.cpp cmdline.h expr.hpp parse.hpp val.h catch.h
 	$(CXX) $(CXXFLAGS) -c main.cpp
@@ -28,8 +28,8 @@ parse.o: parse.cpp parse.hpp expr.hpp
 # -----------------------------
 # Unit tests
 # -----------------------------
-test: test.o test_val.o expr.o val.o parse.o
-	$(CXX) $(CXXFLAGS) test.o test_val.o expr.o val.o parse.o -o test
+test: test.o test_val.o expr.o val.o parse.o env.o
+	$(CXX) $(CXXFLAGS) test.o test_val.o expr.o val.o parse.o env.o -o test
 
 test.o: test.cpp catch.h expr.hpp val.h parse.hpp
 	$(CXX) $(CXXFLAGS) -c test.cpp

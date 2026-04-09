@@ -3,6 +3,7 @@
 #include <stdexcept>
 #include <sstream>
 #include <string>
+#include "env.h"
 
 // helper 
 // return true if expression is a keyword form that usually needs special handling
@@ -49,18 +50,9 @@ bool ExprNum::equals(PTR(Expr) e) {
  * gives back result
  * At runtime preduce NumVal(value); holds actual value
 */
-PTR(Val) ExprNum::interp() {
+PTR(Val) ExprNum::interp(PTR(Env) env) {
+    (void)env; // silance compiler
     return NEW(NumVal)(value);
-}
-
-/**
- * replace variable s with expersion e 
- * subst("x", 3) = now x = 3
- */
-PTR(Expr) ExprNum::subst(std::string s, PTR(Expr) e) {
-    (void)s;
-    (void)e;
-    return NEW(ExprNum)(value);
 }
 
 void ExprNum::printExpr(std::ostream& out) {
@@ -87,17 +79,10 @@ bool ExprVar::equals(PTR(Expr) e) {
     return v != nullptr && this->var == v->var;
 }
 
-PTR(Val) ExprVar::interp() {
-    throw std::runtime_error("free variable: " + var);
+PTR(Val) ExprVar::interp(PTR(Env) env) {
+    return env->lookup(var);
 }
 
-
-// here where substituting happen 
-PTR(Expr) ExprVar::subst(std::string s, PTR(Expr) e) {
-    if (var == s)
-        return e;
-    return NEW(ExprVar)(var);
-}
 
 void ExprVar::printExpr(std::ostream& out) {
     out << var;
@@ -124,15 +109,10 @@ bool ExprAdd::equals(PTR(Expr) e) {
 }
 
 // this uses val.cpp 
-PTR(Val) ExprAdd::interp() {
-    return lhs->interp()->add_to(rhs->interp());
+PTR(Val) ExprAdd::interp(PTR(Env) env) {
+    return lhs->interp(env)->add_to(rhs->interp(env));
 }
 
-
-
-PTR(Expr) ExprAdd::subst(std::string s, PTR(Expr) e) {
-    return NEW(ExprAdd)(lhs->subst(s, e), rhs->subst(s, e));
-}
 
 void ExprAdd::printExpr(std::ostream& out) {
     out << "(";
@@ -180,14 +160,8 @@ bool ExprMult::equals(PTR(Expr) e) {
            rhs->equals(mult->rhs);
 }
 
-PTR(Val) ExprMult::interp() {
-    return lhs->interp()->mult_with(rhs->interp());
-}
-
-
-
-PTR(Expr) ExprMult::subst(std::string s, PTR(Expr) e) {
-    return NEW(ExprMult)(lhs->subst(s, e), rhs->subst(s, e));
+PTR(Val) ExprMult::interp(PTR(Env) env) {
+    return lhs->interp(env)->mult_with(rhs->interp(env));
 }
 
 void ExprMult::printExpr(std::ostream& out) {
@@ -240,23 +214,10 @@ bool ExprLet::equals(PTR(Expr) e) {
            body->equals(let->body);
 }
 
-PTR(Val) ExprLet::interp() {
-    PTR(Val) rhs_val = rhs->interp(); // 
-    PTR(Expr) new_body = body->subst(name, rhs_val->to_expr()); // turn value back into expression, then substitutr it into body
-    return new_body->interp(); // evaluate new body
-}
-
-
-
-PTR(Expr) ExprLet::subst(std::string s, PTR(Expr) e) {
-    PTR(Expr) new_rhs = rhs->subst(s, e);
-
-    if (name == s) {
-        return NEW(ExprLet)(name, new_rhs, body);
-    }
-    else {
-        return NEW(ExprLet)(name, new_rhs, body->subst(s, e));
-    }
+PTR(Val) ExprLet::interp(PTR(Env) env) {
+    PTR(Val) rhs_val = rhs->interp(env);
+    PTR(Env) new_env = NEW(ExtendedEnv)(name, rhs_val, env);
+    return body->interp(new_env);
 }
 
 void ExprLet::printExpr(std::ostream& out) {
@@ -303,16 +264,9 @@ bool BoolExpr::equals(PTR(Expr) e) {
     return b != nullptr && this->value == b->value;
 }
 
-PTR(Val) BoolExpr::interp() {
+PTR(Val) BoolExpr::interp(PTR(Env) env) {
+    (void)env;
     return NEW(BoolVal)(value);
-}
-
-
-
-PTR(Expr) BoolExpr::subst(std::string s, PTR(Expr) e) {
-    (void)s;
-    (void)e;
-    return NEW(BoolExpr)(value);
 }
 
 void BoolExpr::printExpr(std::ostream& out) {
@@ -343,15 +297,10 @@ bool EqExpr::equals(PTR(Expr) e) {
            rhs->equals(eq->rhs);
 }
 
-PTR(Val) EqExpr::interp() {
-    PTR(Val) left_val = lhs->interp();
-    PTR(Val) right_val = rhs->interp();
+PTR(Val) EqExpr::interp(PTR(Env) env) {
+    PTR(Val) left_val = lhs->interp(env);
+    PTR(Val) right_val = rhs->interp(env);
     return NEW(BoolVal)(left_val->equals(right_val));
-}
-
-
-PTR(Expr) EqExpr::subst(std::string s, PTR(Expr) e) {
-    return NEW(EqExpr)(lhs->subst(s, e), rhs->subst(s, e));
 }
 
 void EqExpr::printExpr(std::ostream& out) {
@@ -402,23 +351,13 @@ bool IfExpr::equals(PTR(Expr) e) {
            else_part->equals(iff->else_part);
 }
 
-PTR(Val) IfExpr::interp() {
-    PTR(Val) test_val = test_part->interp();
+PTR(Val) IfExpr::interp(PTR(Env) env) {
+    PTR(Val) test_val = test_part->interp(env);
 
     if (test_val->is_true())
-        return then_part->interp();
+        return then_part->interp(env);
     else
-        return else_part->interp();
-}
-
-
-
-PTR(Expr) IfExpr::subst(std::string s, PTR(Expr) e) {
-    return NEW(IfExpr)(
-        test_part->subst(s, e),
-        then_part->subst(s, e),
-        else_part->subst(s, e)
-    );
+        return else_part->interp(env);
 }
 
 void IfExpr::printExpr(std::ostream& out) {
@@ -467,14 +406,8 @@ bool FunExpr::equals(PTR(Expr) e) {
            body->equals(f->body);
 }
 
-PTR(Val) FunExpr::interp() {
-    return NEW(FunVal)(formal_arg, body);
-}
-
-PTR(Expr) FunExpr::subst(std::string s, PTR(Expr) e) {
-    if (formal_arg == s)
-        return NEW(FunExpr)(formal_arg, body);
-    return NEW(FunExpr)(formal_arg, body->subst(s, e));
+PTR(Val) FunExpr::interp(PTR(Env) env) {
+    return NEW(FunVal)(formal_arg, body, env);
 }
 
 void FunExpr::printExpr(std::ostream& out) {
@@ -515,24 +448,17 @@ bool CallExpr::equals(PTR(Expr) e) {
            actual_arg->equals(c->actual_arg);
 }
 
-PTR(Val) CallExpr::interp() {
-    PTR(Val) fun_val = to_be_called->interp();
+PTR(Val) CallExpr::interp(PTR(Env) env) {
+    PTR(Val) fun_val = to_be_called->interp(env);
 
     PTR(FunVal) f = CAST(FunVal)(fun_val);
     if (f == nullptr)
         throw std::runtime_error("not a function");
 
-    PTR(Val) arg_val = actual_arg->interp();
+    PTR(Val) arg_val = actual_arg->interp(env);
+    PTR(Env) new_env = NEW(ExtendedEnv)(f->formal_arg, arg_val, f->env);
 
-    PTR(Expr) new_body = f->body->subst(f->formal_arg, arg_val->to_expr());
-    return new_body->interp();
-}
-
-PTR(Expr) CallExpr::subst(std::string s, PTR(Expr) e) {
-    return NEW(CallExpr)(
-        to_be_called->subst(s, e),
-        actual_arg->subst(s, e)
-    );
+    return f->body->interp(new_env);
 }
 
 void CallExpr::printExpr(std::ostream& out) {

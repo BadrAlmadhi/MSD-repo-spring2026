@@ -2,6 +2,7 @@
 #include "expr.hpp"
 #include <stdexcept>
 #include <climits>
+#include "env.h"
 
 NumVal::NumVal(int val){
     this->val = val;
@@ -107,9 +108,10 @@ bool BoolVal::is_true() {
 }
 
 // FunVal
-FunVal::FunVal(std::string formal_arg, PTR(Expr) body) {
+FunVal::FunVal(std::string formal_arg, PTR(Expr) body, PTR(Env) env) {
     this->formal_arg = formal_arg;
     this->body = body;
+    this->env = env;
 }
 
 bool FunVal::equals(PTR(Val) other) {
